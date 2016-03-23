@@ -145,43 +145,31 @@ def static_html_proxy(path):
     return app.send_static_file(os.path.join("html", path))
 
 
-@app.route("/_ajax/job")
-def ajax_job():
+@app.route(
+    "/_ajax/job",
+    defaults={"api": "JOB_API_ENDPOINT"}, methods=["GET"])
+@app.route(
+    "/_ajax/build",
+    defaults={"api": "BUILD_API_ENDPOINT"}, methods=["GET"])
+@app.route(
+    "/_ajax/boot",
+    defaults={"api": "BOOT_API_ENDPOINT"}, methods=["GET"])
+def ajax_get(api):
     if validate_csrf(request.headers.get(CSRF_TOKEN_H, None)):
-        return backend.ajax_get(request, app_conf_get("JOB_API_ENDPOINT"))
+        return backend.ajax_get(request, app_conf_get(api), timeout=60*20)
     else:
-        abort(400)
-
-
-@app.route("/_ajax/build")
-def ajax_build():
-    if validate_csrf(request.headers.get(CSRF_TOKEN_H, None)):
-        return backend.ajax_get(
-            request, app_conf_get("BUILD_API_ENDPOINT"))
-    else:
-        abort(400)
-
-
-@app.route("/_ajax/boot")
-def ajax_boot():
-    if validate_csrf(request.headers.get(CSRF_TOKEN_H, None)):
-        return backend.ajax_get(request, app_conf_get("BOOT_API_ENDPOINT"))
-    else:
-        abort(400)
+        abort(403)
 
 
 @app.route("/_ajax/count")
 @app.route("/_ajax/count/<string:collection>")
 def ajax_count(collection=None):
     if validate_csrf(request.headers.get(CSRF_TOKEN_H, None)):
-        # Cache for 1 hour.
         return backend.ajax_count_get(
-            request, app_conf_get("COUNT_API_ENDPOINT"),
-            collection,
-            timeout=60*60
-        )
+            request,
+            app_conf_get("COUNT_API_ENDPOINT"), collection, timeout=60*20)
     else:
-        abort(400)
+        abort(403)
 
 
 @app.route("/_ajax/batch", methods=("POST", "OPTIONS"))
@@ -189,14 +177,11 @@ def ajax_batch():
     if validate_csrf(request.headers.get(CSRF_TOKEN_H, None)):
         if request.data:
             return backend.ajax_batch_post(
-                request,
-                app_conf_get("BATCH_API_ENDPOINT"),
-                timeout=1080
-            )
+                request, app_conf_get("BATCH_API_ENDPOINT"), timeout=60*20)
         else:
             abort(400)
     else:
-        abort(400)
+        abort(403)
 
 
 @app.route("/_ajax/bisect")
@@ -205,10 +190,7 @@ def ajax_bisect_call(doc_id=None):
     if validate_csrf(request.headers.get(CSRF_TOKEN_H, None)):
         return backend.ajax_bisect(
             request,
-            doc_id,
-            app_conf_get("BISECT_API_ENDPOINT"),
-            timeout=60*60*4
-        )
+            doc_id, app_conf_get("BISECT_API_ENDPOINT"), timeout=60*60*4)
     else:
         abort(400)
 
