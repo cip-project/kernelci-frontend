@@ -52,7 +52,8 @@ require.config({
             'app/view-socs-soc-job': 'app/view-socs-soc-job.2016.3.2',
             'app/view-socs-soc-job-kernel': 'app/view-socs-soc-job-kernel.2016.3.2',
             'app/view-sponsors': 'app/view-sponsors.2016.3.2',
-            'app/view-stats': 'app/view-stats.2016.3.2'
+            'app/view-stats': 'app/view-stats.2016.3.2',
+            'app/view-tests-all': 'app/view-tests-all.2016.3.1'
         }
     },
     shim: {
