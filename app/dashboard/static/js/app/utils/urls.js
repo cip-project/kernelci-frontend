@@ -23,6 +23,15 @@ define([
     };
 
     /**
+     * Create just the path of an URL,
+     * @param  {Array} paths
+     * @return {String}
+     */
+    urls.createPathHref = function(paths) {
+        return URI.joinPaths.apply(null, paths).href();
+    };
+
+    /**
      * Create the file server URL and its path.
      * @param  {String} serverURL The file server URL
      * @param  {Object} data      The object from which to take the data
