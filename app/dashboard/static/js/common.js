@@ -27,7 +27,7 @@ require.config({
             'app/view-boot-compare': 'app/view-boot-compare.2016.6',
             'app/view-boots-all': 'app/view-boots-all.2016.11',
             'app/view-boots-all-job': 'app/view-boots-all-job.2016.6',
-            'app/view-boots-all-job-kernel-defconfig': 'app/view-boots-all-job-kernel-defconfig.2016.6',
+            'app/view-boots-all-job-kernel-defconfig': 'app/view-boots-all-job-kernel-defconfig.2017.3.2',
             'app/view-boots-all-lab': 'app/view-boots-all-lab.2016.11',
             'app/view-boots-board': 'app/view-boots-board.2016.11',
             'app/view-boots-board-job': 'app/view-boots-board-job.2016.11',
