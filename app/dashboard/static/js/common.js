@@ -21,7 +21,6 @@ require.config({
         'punycode': 'lib/punycode-1.18.9',
         'IPv6': 'lib/IPv6-1.18.9',
         'SecondLevelDomains': 'lib/SecondLevelDomains-1.18.9'
-        // 'URI': 'https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.18.9/URI.min',
     },
     map: {
         '*': {
@@ -41,7 +40,7 @@ require.config({
             'app/view-build-compare': 'app/view-build-compare.2016.6',
             'app/view-builds-all': 'app/view-builds-all.2016.11',
             'app/view-builds-id': 'app/view-builds-id.2017.3',
-            'app/view-builds-job-kernel': 'app/view-builds-job-kernel.2016.7.1',
+            'app/view-builds-job-kernel': 'app/view-builds-job-kernel.2017.3.2',
             'app/view-builds-job-kernel-defconfig': 'app/view-builds-job-kernel-defconfig.2016.6',
             'app/view-builds-job-kernel-defconfig-logs': 'app/view-builds-job-kernel-defconfig-logs.2016.6',
             'app/view-compare': 'app/view-compare.2016.6',
@@ -57,12 +56,7 @@ require.config({
             'app/view-socs-soc-job-kernel': 'app/view-socs-soc-job-kernel.2016.6',
             'app/view-sponsors': 'app/view-sponsors.2016.6',
             'app/view-stats': 'app/view-stats.2016.6'
-        },
-        // 'URI': {
-        //     'punycode': 'https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.18.9/punycode.js',
-        //     'IPv6': 'https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.18.9/IPv6.js',
-        //     'SecondLevelDomains': 'https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.18.9/SecondLevelDomains.js'
-        // }
+        }
     },
     shim: {
         'bootstrap': {
