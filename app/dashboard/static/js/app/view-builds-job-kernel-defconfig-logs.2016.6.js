@@ -88,9 +88,8 @@ require([
 
                 aNode.setAttribute(
                     'href',
-                    translatedURI[0]
-                        .path(translatedURI[1] + '/' + customLog)
-                        .normalizePath().href()
+                    urls.getHref(
+                        translatedURI[0], [translatedURI[1], customLog])
                 );
                 aNode.appendChild(document.createTextNode('build logs.'));
             }
@@ -115,19 +114,11 @@ require([
             results = results[0];
 
             serverURL = results.file_server_url;
-            if (serverURL === null || serverURL === undefined) {
+            if (!serverURL) {
                 serverURL = gFileServer;
             }
 
-            translatedURI = urls.translateServerURL(
-                serverURL,
-                results.file_server_resource,
-                [
-                    results.job,
-                    results.kernel,
-                    results.arch + '-' + results.defconfig_full
-                ]
-            );
+            translatedURI = urls.createFileServerURL(serverURL, results);
 
             errorsCount = parseInt(results.errors_count, 10);
             warningsCount = parseInt(results.warnings_count, 10);
@@ -148,19 +139,19 @@ require([
             if (errorsCount > 0) {
                 setTimeout(function() {
                     _parseLogStrings('Errors', results.errors, 'errors');
-                }, 1);
+                }, 50);
             }
 
             if (warningsCount > 0) {
                 setTimeout(function() {
                     _parseLogStrings('Warnings', results.warnings, 'warnings');
-                }, 1);
+                }, 50);
             }
 
             if (mismatchesCount > 0) {
                 setTimeout(function() {
                     _parseLogStrings('Mismatched', results.mismatches, 'mism');
-                }, 1);
+                }, 50);
             }
 
             html.removeElement(document.getElementById('build-logs-loading'));
@@ -272,7 +263,8 @@ require([
             tooltipNode.setAttribute('title', 'Details for tree&nbsp;' + job);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute('href', '/job/' + job + '/');
+            aNode.setAttribute(
+                'href', urls.createPathHref(['/job/', job, '/']));
             aNode.appendChild(document.createTextNode(job));
 
             spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
@@ -282,7 +274,8 @@ require([
                 'title', 'Boot reports for tree&nbsp;' + job);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute('href', '/boot/all/job/' + job + '/');
+            aNode.setAttribute(
+                'href', urls.createPathHref(['/boot/all/job/', job, '/']));
             aNode.appendChild(html.boot());
 
             html.replaceContent(document.getElementById('tree'), docFrag);
@@ -305,7 +298,9 @@ require([
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
             aNode.setAttribute(
-                'href', '/build/' + job + '/kernel/' + kernel + '/');
+                'href', urls.createPathHref([
+                    '/build/', job, '/kernel/', kernel, '/'
+                ]));
             aNode.appendChild(document.createTextNode(kernel));
 
             spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
@@ -319,7 +314,8 @@ require([
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
             aNode.setAttribute(
-                'href', '/boot/all/job/' + job + '/kernel/' + kernel + '/');
+                'href', urls.createPathHref([
+                    '/boot/all/job/', job, '/kernel/', kernel, '/']));
             aNode.appendChild(html.boot());
 
             html.replaceContent(
@@ -343,9 +339,15 @@ require([
             aNode = tooltipNode.appendChild(document.createElement('a'));
             aNode.setAttribute(
                 'href',
-                '/boot/all/job/' + job + '/kernel/' +
-                kernel + '/defconfig/' + defconfigFull + '/'
-            );
+                urls.createPathHref([
+                    '/boot/all/job/',
+                    job,
+                    '/kernel/',
+                    kernel,
+                    '/defconfig/',
+                    defconfigFull,
+                    '/'
+                 ]));
             aNode.appendChild(html.boot());
 
             html.replaceContent(
@@ -454,9 +456,7 @@ require([
                 aNode = spanNode.appendChild(document.createElement('a'));
                 aNode.setAttribute(
                     'href',
-                    translatedURI[0]
-                        .path(translatedURI[1] + '/' + buildLog)
-                        .normalizePath().href()
+                    urls.getHref(translatedURI[0], [translatedURI[1], buildLog])
                 );
 
                 aNode.appendChild(document.createTextNode(buildLog));
