@@ -379,7 +379,7 @@ require([
                         'href',
                         u.getHref(
                             translatedURI[0],
-                            translatedURI[1], result.build_log)
+                            [translatedURI[1], result.build_log])
                     );
                     aNode.insertAdjacentHTML('beforeend', warnErrCount);
                 } else {
@@ -428,8 +428,7 @@ require([
                 aNode.setAttribute(
                     'href',
                     u.getHref(
-                        translatedURI[0],
-                        translatedURI[1], result.dtb_dir)
+                        translatedURI[0], [translatedURI[1], result.dtb_dir])
                 );
                 aNode.appendChild(document.createTextNode(result.dtb_dir));
                 aNode.insertAdjacentHTML('beforeend', '&nbsp;');
@@ -447,8 +446,7 @@ require([
                 aNode.setAttribute(
                     'href',
                     u.getHref(
-                        translatedURI[0],
-                        translatedURI[1], result.modules)
+                        translatedURI[0], [translatedURI[1], result.modules])
                 );
                 aNode.appendChild(document.createTextNode(result.modules));
                 aNode.insertAdjacentHTML('beforeend', '&nbsp;');
@@ -482,7 +480,7 @@ require([
                     'href',
                     u.getHref(
                         translatedURI[0],
-                        translatedURI[1], result.kernel_image)
+                        [translatedURI[1], result.kernel_image])
                 );
                 aNode.appendChild(
                     document.createTextNode(result.kernel_image));
@@ -509,7 +507,7 @@ require([
                     'href',
                     u.getHref(
                         translatedURI[0],
-                        translatedURI[1], result.kernel_config)
+                        [translatedURI[1], result.kernel_config])
                 );
                 aNode.appendChild(
                     document.createTextNode(result.kernel_config));
@@ -534,7 +532,7 @@ require([
                     'href',
                     u.getHref(
                         translatedURI[0],
-                        translatedURI[1], result.build_log)
+                        [translatedURI[1], result.build_log])
                 );
                 aNode.appendChild(
                     document.createTextNode(result.build_log));
