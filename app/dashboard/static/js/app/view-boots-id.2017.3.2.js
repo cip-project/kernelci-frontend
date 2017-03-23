@@ -1058,9 +1058,6 @@ require([
             docFrag = document.createDocumentFragment();
             spanNode = docFrag.appendChild(document.createElement('span'));
             aNode = spanNode.appendChild(document.createElement('a'));
-            str = pathURI;
-            str += '/';
-            str += kernelImage;
             aNode.setAttribute(
                 'href', u.getHref(serverURI, [pathURI, kernelImage])
             );

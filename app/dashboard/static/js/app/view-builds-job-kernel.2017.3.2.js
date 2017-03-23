@@ -393,7 +393,9 @@ require([
 
                 tooltipNode.setAttribute('title', warnErrTooltip);
                 aNode = tooltipNode.appendChild(document.createElement('a'));
-                aNode.setAttribute('href', '/build/id/' + docId + '/logs/');
+                aNode.setAttribute(
+                    'href',
+                    u.createPathHref(['/build/id/', docId, 'logs', '/']));
                 aNode.insertAdjacentHTML('beforeend', warnErrCount);
             }
 
@@ -626,7 +628,9 @@ require([
             tooltipNode = infoNode.appendChild(html.tooltip());
             tooltipNode.setAttribute('title', 'Details for this build');
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute('href', '/build/id/' + result._id.$oid + '/');
+            aNode.setAttribute(
+                'href',
+                u.createPathHref(['/build/id/', result._id.$oid, '/']));
             aNode.insertAdjacentHTML('beforeend', 'More info&nbsp;');
             aNode.appendChild(html.search());
         }
@@ -755,7 +759,7 @@ require([
             tooltipNode.setAttribute('title', 'Details for tree ' + job);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute('href', '/job/' + job + '/');
+            aNode.setAttribute('href', u.createPathHref(['/job/', job, '/']));
             aNode.appendChild(document.createTextNode(job));
 
             spanNode.insertAdjacentHTML(
@@ -766,7 +770,8 @@ require([
                 'title', 'Boot reports details for ' + job);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute('href', '/boot/all/job/' + job + '/');
+            aNode.setAttribute(
+                'href', u.createPathHref(['/boot/all/job/', job, '/']));
             aNode.appendChild(html.boot());
 
             html.replaceContent(document.getElementById('tree'), docFrag);
@@ -794,7 +799,7 @@ require([
             aNode = tooltipNode.appendChild(document.createElement('a'));
             aNode.setAttribute(
                 'href',
-                '/boot/all/job/' + job + '/kernel/' + kernel + '/');
+                u.createHrefPath('/boot/all/job/', job, 'kernel', kernel, '/'));
             aNode.appendChild(html.boot());
 
             html.replaceContent(

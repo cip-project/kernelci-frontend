@@ -225,13 +225,11 @@ require([
             serverResource = results.file_server_resource;
             createdOn = new Date(results.created_on.$date);
 
-            if (serverURL === null || serverURL === undefined) {
+            if (!serverURL) {
                 serverURL = gFileServer;
             }
 
-            translatedURI = urls.translateServerURL(
-                serverURL,
-                serverResource, [job, kernel, arch + '-' + defconfigFull]);
+            translatedURI = urls.createFileServerURL(serverURL, results);
 
             gitURLs = urls.translateCommit(gitURL, gitCommit);
 

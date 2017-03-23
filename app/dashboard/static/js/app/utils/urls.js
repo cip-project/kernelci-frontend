@@ -77,39 +77,6 @@ define([
         return translatedURL;
     };
 
-    // Translate a URL into a URI object.
-    // Return a 2-elements list:
-    //  0. The URI object
-    //  1. The URI path
-    // In case the server URL is not valid, it returns a 2-nulls list.
-    urls.translateServerURL = function(serverUrl, serverPath, data) {
-        var serverUri,
-            translatedUrl,
-            validPath;
-
-        function addPath(value) {
-            validPath = validPath + value + '/';
-        }
-
-        if (serverUrl) {
-            if (serverPath) {
-                validPath = serverPath;
-            } else {
-                validPath = '';
-                if (data) {
-                    data.forEach(addPath);
-                }
-            }
-
-            serverUri = new URI(serverUrl);
-            translatedUrl = [serverUri, serverUri.path() + '/' + validPath];
-        } else {
-            translatedUrl = [null, null];
-        }
-
-        return translatedUrl;
-    };
-
     /*
         Return a list with:
         0. The base git URL
