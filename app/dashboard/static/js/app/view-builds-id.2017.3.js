@@ -201,7 +201,7 @@ require([
                     render: tboot.renderResultDescription
                 },
                 {
-                    data: 'boot_log',
+                    data: 'file_server_url',
                     title: 'Boot Log',
                     searchable: false,
                     orderable: false,
@@ -264,6 +264,7 @@ require([
                         'boot_log_html',
                         'file_server_url',
                         'file_server_resource',
+                        'version',
                         'job', 'kernel', 'defconfig_full', 'lab_name', 'status'
                     ]
                 };
@@ -280,6 +281,7 @@ require([
                         'boot_log_html',
                         'file_server_url',
                         'file_server_resource',
+                        'version',
                         'job', 'kernel', 'defconfig_full', 'lab_name', 'status'
                     ],
                     job: results.job,
@@ -305,6 +307,7 @@ require([
     function getBuildsDone(response) {
         var aNode;
         var arch;
+        var branch;
         var bssSize;
         var buildLog;
         var buildLogSize;
@@ -325,7 +328,6 @@ require([
         var divNode;
         var docFrag;
         var dtb;
-        var fileServerData;
         var fileServerResource;
         var fileServerURI;
         var fileServerURL;
@@ -379,6 +381,7 @@ require([
             results = response.result[0];
             job = results.job;
             kernel = results.kernel;
+            branch = results.git_branch;
             gitURL = results.git_url;
             gitCommit = results.git_commit;
             createdOn = new Date(results.created_on.$date);
@@ -431,15 +434,11 @@ require([
 
             document.getElementById('details').appendChild(docFrag);
 
-            if (fileServerURL === null || fileServerURL === undefined) {
+            if (!fileServerURL) {
                 fileServerURL = gFileServer;
             }
 
-            fileServerData = [
-                job, kernel, arch + '-' + defconfigFull
-            ];
-            translatedUri = urls.translateServerURL(
-                fileServerURL, fileServerResource, fileServerData);
+            translatedUri = urls.createFileServerURL(fileServerURL, results);
             fileServerURI = translatedUri[0];
             pathURI = translatedUri[1];
 
@@ -453,7 +452,8 @@ require([
             tooltipNode.setAttribute('title', 'Details for tree&nbsp;' + job);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute('href', '/job/' + job + '/');
+            aNode.setAttribute(
+                'href', urls.createPathHref(['/job/', job, '/']));
             aNode.appendChild(document.createTextNode(job));
 
             spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
@@ -463,7 +463,8 @@ require([
                 'title', 'Boot reports for tree&nbsp;' + job);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute('href', '/boot/all/job/' + job + '/');
+            aNode.setAttribute(
+                'href', urls.createPathHref(['/boot/all/job/', job, '/']));
             aNode.appendChild(html.boot());
 
             html.replaceContent(document.getElementById('tree'), docFrag);
@@ -485,7 +486,8 @@ require([
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
             aNode.setAttribute(
-                'href', '/build/' + job + '/kernel/' + kernel + '/');
+                'href',
+                urls.createPathHref(['/build/', job, '/kernel/', kernel, '/']));
             aNode.appendChild(document.createTextNode(kernel));
 
             spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
@@ -499,7 +501,9 @@ require([
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
             aNode.setAttribute(
-                'href', '/boot/all/job/' + job + '/kernel/' + kernel + '/');
+                'href', urls.createPathHref([
+                    '/boot/all/job/', job, '/kernel/', kernel, '/'
+                ]));
             aNode.appendChild(html.boot());
 
             html.replaceContent(
@@ -630,9 +634,15 @@ require([
             aNode = tooltipNode.appendChild(document.createElement('a'));
             aNode.setAttribute(
                 'href',
-                '/boot/all/job/' + job + '/kernel/' +
-                kernel + '/defconfig/' + defconfigFull + '/'
-            );
+                urls.createPathHref([
+                    '/boot/all/job/',
+                    job,
+                    '/kernel/',
+                    kernel,
+                    '/defconfig/',
+                    defconfigFull,
+                    '/'
+                ]));
             aNode.appendChild(html.boot());
 
             html.replaceContent(
@@ -674,10 +684,7 @@ require([
                 aNode = docFrag.appendChild(document.createElement('a'));
                 aNode.setAttribute(
                     'href',
-                    fileServerURI
-                        .path(pathURI + '/' + dtb + '/')
-                        .normalizePath().href()
-                );
+                    urls.getHref(fileServerURI, [pathURI, dtb, '/']));
                 aNode.appendChild(document.createTextNode(dtb));
                 aNode.insertAdjacentHTML('beforeend', '&nbsp;');
                 aNode.appendChild(html.external());
@@ -696,10 +703,7 @@ require([
                 aNode = spanNode.appendChild(document.createElement('a'));
                 aNode.setAttribute(
                     'href',
-                    fileServerURI
-                        .path(pathURI + '/' + buildModules)
-                        .normalizePath().href()
-                );
+                    urls.getHref(fileServerURI, [pathURI, buildModules]));
                 aNode.appendChild(document.createTextNode(buildModules));
                 aNode.insertAdjacentHTML('beforeend', '&nbsp;');
                 aNode.appendChild(html.external());
@@ -785,10 +789,7 @@ require([
                 aNode = spanNode.appendChild(document.createElement('a'));
                 aNode.setAttribute(
                     'href',
-                    fileServerURI
-                        .path(pathURI + '/' + kernelImage)
-                        .normalizePath().href()
-                );
+                    urls.getHref(fileServerURI, [pathURI, kernelImage]));
                 aNode.appendChild(document.createTextNode(kernelImage));
                 aNode.insertAdjacentHTML('beforeend', '&nbsp;');
                 aNode.appendChild(html.external());
@@ -812,10 +813,7 @@ require([
                 aNode = spanNode.appendChild(document.createElement('a'));
                 aNode.setAttribute(
                     'href',
-                    fileServerURI
-                        .path(pathURI + '/' + kernelConfig)
-                        .normalizePath().href()
-                );
+                    urls.getHref(fileServerURI, [pathURI, kernelConfig]));
                 aNode.appendChild(document.createTextNode(kernelConfig));
                 aNode.insertAdjacentHTML('beforeend', '&nbsp;');
                 aNode.appendChild(html.external());
@@ -839,10 +837,7 @@ require([
                 aNode = spanNode.appendChild(document.createElement('a'));
                 aNode.setAttribute(
                     'href',
-                    fileServerURI
-                        .path(pathURI + '/' + systemMap)
-                        .normalizePath().href()
-                );
+                    urls.getHref(fileServerURI, [pathURI, systemMap]));
                 aNode.appendChild(document.createTextNode(systemMap));
                 aNode.insertAdjacentHTML('beforeend', '&nbsp;');
                 aNode.appendChild(html.external());
@@ -866,10 +861,7 @@ require([
                 aNode = spanNode.appendChild(document.createElement('a'));
                 aNode.setAttribute(
                     'href',
-                    fileServerURI
-                        .path(pathURI + '/' + buildLog)
-                        .normalizePath().href()
-                );
+                    urls.getHref(fileServerURI, [pathURI, buildLog]));
                 aNode.appendChild(document.createTextNode(buildLog));
                 aNode.insertAdjacentHTML('beforeend', '&nbsp;');
                 aNode.appendChild(html.external());
