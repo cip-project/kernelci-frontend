@@ -187,7 +187,6 @@ require([
         var job;
         var kernel;
         var results;
-        var serverResource;
         var serverURL;
         var spanNode;
         var tooltipNode;
@@ -222,7 +221,6 @@ require([
             buildTime = results.build_time;
             buildLog = results.build_log;
             serverURL = results.file_server_url;
-            serverResource = results.file_server_resource;
             createdOn = new Date(results.created_on.$date);
 
             if (!serverURL) {

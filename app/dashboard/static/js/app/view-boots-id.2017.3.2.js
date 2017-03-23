@@ -51,7 +51,6 @@ require([
         var logsNode;
         var resultDescription;
         var rowNode;
-        var serverResource;
         var serverURL;
         var translatedURI;
 
@@ -61,7 +60,6 @@ require([
         kernel = data.kernel;
         lab = data.lab_name;
         resultDescription = data.boot_result_description;
-        serverResource = data.file_server_resource;
         serverURL = data.file_server_url;
 
         if (!serverURL) {
@@ -626,7 +624,6 @@ require([
         var qemuData;
         var result;
         var resultDescription;
-        var serverResource;
         var serverURI;
         var serverURL;
         var smallNode;
@@ -650,7 +647,6 @@ require([
         arch = result.arch;
         lab = result.lab_name;
         serverURL = result.file_server_url;
-        serverResource = result.file_server_resource;
 
         resultDescription = result.boot_result_description;
         endianness = result.endian;

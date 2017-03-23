@@ -328,7 +328,6 @@ require([
         var divNode;
         var docFrag;
         var dtb;
-        var fileServerResource;
         var fileServerURI;
         var fileServerURL;
         var gitCommit;
@@ -402,7 +401,6 @@ require([
             buildLogSize = results.build_log_size;
             buildPlatform = results.build_platform;
             fileServerURL = results.file_server_url;
-            fileServerResource = results.file_server_resource;
             compiler = results.compiler;
             compilerVersion = results.compiler_version;
             compilerVersionFull = results.compiler_version_full;

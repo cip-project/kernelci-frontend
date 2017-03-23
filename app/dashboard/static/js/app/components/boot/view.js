@@ -182,7 +182,6 @@ define([
         var panelNode;
         var pathURI;
         var rowNode;
-        var serverResource;
         var serverURI;
         var serverURL;
         var smallNode;
@@ -197,7 +196,6 @@ define([
         kernel = result.kernel;
         docId = result._id.$oid;
         serverURL = result.file_server_url;
-        serverResource = result.file_server_resource;
         defconfigFull = result.defconfig_full;
         arch = result.arch;
         labName = result.lab_name;
