@@ -12,12 +12,14 @@ define([
     /**
      * Concatenate the path and extra path to create a full URL.
      * @param  {URI}    base      The base URI
-     * @param  {String} path      The path string
-     * @param  {String} extraPath The extra path to append
+     * @param  {Array}  paths     The other paths to join
      * @return {String}           The normalized href
      */
-    urls.getHref = function(base, path, extraPath) {
-        return base.path(URI.joinPaths(path, extraPath)).normalizePath().href();
+    urls.getHref = function(base, paths) {
+        return base
+            .path(URI.joinPaths.apply(null, paths))
+            .normalizePath()
+            .href();
     };
 
     /**
