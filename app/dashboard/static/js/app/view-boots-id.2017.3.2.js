@@ -1009,9 +1009,6 @@ require([
         if (dtb) {
             docFrag = document.createDocumentFragment();
             aNode = docFrag.appendChild(document.createElement('a'));
-            str = pathURI;
-            str += '/';
-            str += dtb;
             aNode.setAttribute(
                 'href', u.getHref(serverURI, [pathURI, dtb, '/'])
             );
