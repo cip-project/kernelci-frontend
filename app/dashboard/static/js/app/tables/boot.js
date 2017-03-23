@@ -55,7 +55,8 @@ define([
 
             aNode = document.createElement('a');
             aNode.className = 'table-link';
-            aNode.setAttribute('href', '/boot/all/lab/' + lab + '/');
+            aNode.setAttribute(
+                'href', urls.createPathHref(['/boot/all/lab/', lab, '/']));
             aNode.appendChild(document.createTextNode(lab));
 
             tooltipNode.appendChild(aNode);
@@ -97,7 +98,15 @@ define([
             aNode.className = 'table-link';
             aNode.setAttribute(
                 'href',
-                '/boot/' + board + '/job/' + job + '/kernel/' + kernel + '/');
+                urls.createPathHref([
+                    '/boot/',
+                    board,
+                    '/job/',
+                    job,
+                    '/kernel/',
+                    kernel,
+                    '/'
+                ]));
 
             aNode.appendChild(document.createTextNode(board));
             tooltipNode.appendChild(aNode);
@@ -240,10 +249,17 @@ define([
             aNode.className = 'table-link';
             aNode.setAttribute(
                 'href',
-                '/boot/' + board + '/job/' + job +
-                '/kernel/' + kernel + '/defconfig/' +
-                defconfig + '/'
-            );
+                urls.createPathHref([
+                    '/boot/',
+                    board,
+                    '/job/',
+                    job,
+                    '/kernel/',
+                    kernel,
+                    '/defconfig/',
+                    defconfig,
+                    '/'
+                ]));
 
             aNode.appendChild(document.createTextNode(defconfig));
             tooltipNode.appendChild(aNode);
@@ -283,8 +299,13 @@ define([
             aNode.className = 'table-link';
             aNode.setAttribute(
                 'href',
-                '/boot/all/job/' + job + '/kernel/' +
-                kernel + '/'
+                urls.createPathHref([
+                    '/boot/all/job/',
+                    job,
+                    '/kernel/',
+                    kernel,
+                    '/'
+                ])
             );
 
             aNode.appendChild(document.createTextNode(kernel));
@@ -346,10 +367,7 @@ define([
         var job;
         var kernel;
         var logNode;
-        var pathURI;
         var rendered;
-        var serverResource;
-        var serverURI;
         var translatedURI;
 
         rendered = null;
@@ -363,20 +381,15 @@ define([
             defconfig = object.defconfig_full;
             job = object.job;
             kernel = object.kernel;
-            serverResource = object.file_server_resource;
 
-            translatedURI = urls.translateServerURL(
-                data, serverResource, [job, kernel, arch + '-' + defconfig]
-            );
-            serverURI = translatedURI[0];
-            pathURI = translatedURI[1];
+            translatedURI = urls.createFileServerURL(data, object);
 
             logNode = boot.createBootLog(
                 object.boot_log,
                 object.boot_log_html,
                 object.lab_name,
-                serverURI,
-                pathURI
+                translatedURI[0],
+                translatedURI[1]
             );
 
             if (logNode) {
@@ -446,7 +459,12 @@ define([
         tooltipNode.setAttribute('title', 'More info');
 
         aNode = document.createElement('a');
-        aNode.setAttribute('href', '/boot/id/' + object._id.$oid + '/');
+        aNode.setAttribute(
+            'href', urls.createPathHref([
+                '/boot/id/',
+                object._id.$oid,
+                '/'
+            ]));
 
         aNode.appendChild(html.search());
         tooltipNode.appendChild(aNode);
@@ -492,7 +510,10 @@ define([
             );
             aNode = document.createElement('a');
             aNode.setAttribute(
-                'href', '/boot/all/job/' + job + '/kernel/' + kernel + '/');
+                'href',
+                urls.createPathHref([
+                    '/boot/all/job/', job, '/kernel/', kernel, '/'
+                ]));
 
             aNode.appendChild(html.search());
             tooltipNode.appendChild(aNode);
