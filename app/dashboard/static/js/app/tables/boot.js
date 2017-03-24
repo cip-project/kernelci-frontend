@@ -6,8 +6,8 @@ define([
     'tables/common'
 ], function(boot, html, urls, tcommon) {
     'use strict';
-    var gBootUtils,
-        gStatusDefaults;
+    var gBootUtils;
+    var gStatusDefaults;
 
     gBootUtils = {};
 
@@ -46,6 +46,7 @@ define([
     gBootUtils.renderLab = function(lab, type) {
         var aNode;
         var rendered;
+        var str;
         var tooltipNode;
 
         rendered = lab;
@@ -55,8 +56,10 @@ define([
 
             aNode = document.createElement('a');
             aNode.className = 'table-link';
-            aNode.setAttribute(
-                'href', urls.createPathHref(['/boot/all/lab/', lab, '/']));
+            str = '/boot/all/lab/';
+            str += lab;
+            str += '/';
+            aNode.setAttribute('href', str);
             aNode.appendChild(document.createTextNode(lab));
 
             tooltipNode.appendChild(aNode);
@@ -81,32 +84,26 @@ define([
     **/
     gBootUtils.renderBoard = function(board, type, object) {
         var aNode;
-        var job;
-        var kernel;
-        var tooltipNode;
         var rendered;
+        var str;
+        var tooltipNode;
 
         rendered = board;
         if (type === 'display') {
-            job = object.job;
-            kernel = object.kernel;
 
             tooltipNode = html.tooltip();
             tooltipNode.setAttribute('title', board);
 
             aNode = document.createElement('a');
             aNode.className = 'table-link';
-            aNode.setAttribute(
-                'href',
-                urls.createPathHref([
-                    '/boot/',
-                    board,
-                    '/job/',
-                    job,
-                    '/kernel/',
-                    kernel,
-                    '/'
-                ]));
+            str = '/boot/';
+            str += board;
+            str += '/job/';
+            str += object.job;
+            str += '/kernel/';
+            str += object.kernel;
+            str += '/';
+            aNode.setAttribute('href', str);
 
             aNode.appendChild(document.createTextNode(board));
             tooltipNode.appendChild(aNode);
@@ -230,36 +227,29 @@ define([
     **/
     gBootUtils.renderDefconfig = function(defconfig, type, object) {
         var aNode;
-        var board;
-        var job;
-        var kernel;
         var rendered;
+        var str;
         var tooltipNode;
 
         rendered = defconfig;
         if (type === 'display') {
-            board = object.board;
-            job = object.job;
-            kernel = object.kernel;
-
             tooltipNode = html.tooltip();
             tooltipNode.setAttribute('title', defconfig);
 
             aNode = document.createElement('a');
             aNode.className = 'table-link';
-            aNode.setAttribute(
-                'href',
-                urls.createPathHref([
-                    '/boot/',
-                    board,
-                    '/job/',
-                    job,
-                    '/kernel/',
-                    kernel,
-                    '/defconfig/',
-                    defconfig,
-                    '/'
-                ]));
+            str = '/boot/';
+            str += object.board;
+            str += '/job/';
+            str += object.job;
+            str += '/branch/';
+            str += object.git_branch;
+            str += '/kernel/';
+            str += object.kernel;
+            str += '/defconfig/';
+            str += defconfig;
+            str += '/';
+            aNode.setAttribute('href', str);
 
             aNode.appendChild(document.createTextNode(defconfig));
             tooltipNode.appendChild(aNode);
@@ -285,28 +275,25 @@ define([
     **/
     gBootUtils.renderKernel = function(kernel, type, object) {
         var aNode;
-        var job;
+        var str;
         var tooltipNode;
         var rendered;
 
         rendered = kernel;
         if (type === 'display') {
-            job = object.job;
             tooltipNode = html.tooltip();
             tooltipNode.setAttribute('title', kernel);
 
             aNode = document.createElement('a');
             aNode.className = 'table-link';
-            aNode.setAttribute(
-                'href',
-                urls.createPathHref([
-                    '/boot/all/job/',
-                    job,
-                    '/kernel/',
-                    kernel,
-                    '/'
-                ])
-            );
+            str = '/boot/all/job/';
+            str += object.job;
+            str += '/branch/';
+            str += object.git_branch;
+            str += '/kernel/';
+            str += kernel;
+            str += '/';
+            aNode.setAttribute('href', str);
 
             aNode.appendChild(document.createTextNode(kernel));
             tooltipNode.appendChild(aNode);
@@ -362,10 +349,6 @@ define([
      * @return {string} The rendered element as a string.
     **/
     gBootUtils.renderBootLogs = function(data, type, object) {
-        var arch;
-        var defconfig;
-        var job;
-        var kernel;
         var logNode;
         var rendered;
         var translatedURI;
@@ -376,11 +359,6 @@ define([
             if (!data) {
                 data = object.default_file_server;
             }
-
-            arch = object.arch;
-            defconfig = object.defconfig_full;
-            job = object.job;
-            kernel = object.kernel;
 
             translatedURI = urls.createFileServerURL(data, object);
 
@@ -453,18 +431,17 @@ define([
     **/
     gBootUtils.detailsNode = function(board, object) {
         var aNode;
+        var str;
         var tooltipNode;
 
         tooltipNode = html.tooltip();
         tooltipNode.setAttribute('title', 'More info');
 
         aNode = document.createElement('a');
-        aNode.setAttribute(
-            'href', urls.createPathHref([
-                '/boot/id/',
-                object._id.$oid,
-                '/'
-            ]));
+        str = '/boot/id/';
+        str += object._id.$oid;
+        str += '/';
+        aNode.setAttribute('href', str);
 
         aNode.appendChild(html.search());
         tooltipNode.appendChild(aNode);
@@ -494,26 +471,32 @@ define([
      * @return {string} The rendered element as a string.
     **/
     gBootUtils.renderTableDetailJob = function(job, type, object) {
-        var aNode,
-            kernel,
-            rendered,
-            tooltipNode;
+        var aNode;
+        var rendered;
+        var str;
+        var tooltipNode;
 
         rendered = null;
         if (type === 'display') {
-            kernel = object.kernel;
-
             tooltipNode = html.tooltip();
-            tooltipNode.setAttribute(
-                'title',
-                'Boot reports for&nbsp;' + job + '&nbsp;&dash;&nbsp;' + kernel
-            );
+            str = 'Boot reports for&nbsp;';
+            str += job;
+            str += '&nbsp;&ndash;&nbsp;';
+            str += object.kernel;
+            str += '&nbsp;(';
+            str += object.git_branch;
+            str += ')';
+            tooltipNode.setAttribute('title', str);
+
             aNode = document.createElement('a');
-            aNode.setAttribute(
-                'href',
-                urls.createPathHref([
-                    '/boot/all/job/', job, '/kernel/', kernel, '/'
-                ]));
+            str = '/boot/all/job/';
+            str += job;
+            str += '/branch/';
+            str += object.git_branch;
+            str += '/kernel/';
+            str += object.kernel;
+            str += '/';
+            aNode.setAttribute('href', str);
 
             aNode.appendChild(html.search());
             tooltipNode.appendChild(aNode);

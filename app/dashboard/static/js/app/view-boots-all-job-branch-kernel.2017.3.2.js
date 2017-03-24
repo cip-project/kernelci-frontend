@@ -37,7 +37,7 @@ require([
 
     setTimeout(function() {
         document.getElementById('li-boot').setAttribute('class', 'active');
-    }, 10);
+    }, 15);
 
     function uniqueCountFail() {
        html.replaceByClassHTML('unique-values', '&infin;');
@@ -767,5 +767,5 @@ require([
                 window.scrollTo(0, 0);
             }
         }
-    }, 15);
+    }, 25);
 });
