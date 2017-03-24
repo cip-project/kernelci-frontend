@@ -283,9 +283,17 @@ require([
         /**
          * Wrapper to provide the href.
         **/
-        function _renderDetails(data, type) {
+        function _renderDetails(data, type, object) {
             return jobt.renderDetails(
-                '/build/' + gJobName + '/kernel/' + data + '/', type);
+                u.createPathHref([
+                    '/build/',
+                    gJobName,
+                    'branch',
+                    object.git_branch,
+                    'kernel',
+                    data,
+                    '/'
+                ]), type);
         }
 
         /**
@@ -349,18 +357,18 @@ require([
         } else {
             columns = [
                 {
-                    data: 'kernel',
-                    title: 'Kernel',
-                    type: 'string',
-                    className: 'kernel-column',
-                    render: _renderKernel
-                },
-                {
                     data: 'git_branch',
                     title: 'Branch',
                     type: 'string',
                     className: 'branch-column',
                     render: _renderBranch
+                },
+                {
+                    data: 'kernel',
+                    title: 'Kernel',
+                    type: 'string',
+                    className: 'kernel-column',
+                    render: _renderKernel
                 },
                 {
                     data: 'git_commit',
