@@ -69,7 +69,7 @@ class BuildsJobKernelView(GeneralBuildsView):
         kernel = kwargs.get("kernel")
 
         body_title = (
-            "Build details for&nbsp;&#171;{:s}&#187;&nbsp;&dash;&nbsp;".format(
+            "Build details for &#171;{}&#187;&nbsp;&ndash;&nbsp;".format(
                 job)
         )
 
@@ -78,6 +78,26 @@ class BuildsJobKernelView(GeneralBuildsView):
             page_title=self.BUILD_PAGES_TITLE,
             body_title=body_title,
             job=job,
+            kernel=kernel
+        )
+
+
+class BuildsJobBranchKernelView(GeneralBuildsView):
+
+    def dispatch_request(self, *args, **kwargs):
+        tree = kwargs["tree"]
+        branch = kwargs["branch"]
+        kernel = kwargs["kernel"]
+
+        body_title = \
+            "Build Reports: &#171;{}&#187; &ndash;&nbsp;".format(tree)
+
+        return render_template(
+            "builds-job-branch-kernel.html",
+            page_title=self.BUILD_PAGES_TITLE,
+            body_title=body_title,
+            tree=tree,
+            branch=branch,
             kernel=kernel
         )
 

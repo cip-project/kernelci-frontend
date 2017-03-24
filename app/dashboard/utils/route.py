@@ -73,6 +73,20 @@ def init():
         view_func=vbuild.BuildsAllView.as_view("all-builds"),
         methods=["GET"]
     )
+
+    add_rule(
+        "/build/<string:tree>/branch/<string:branch>/kernel/<string:kernel>/",
+        view_func=vbuild.BuildsJobBranchKernelView.as_view(
+            "job-branch-kernel-builds"),
+        methods=["GET"]
+    )
+    add_rule(
+        "/build/<string:tree>/branch/<string:branch>/kernel/latest/",
+        view_func=vbuild.BuildsJobBranchKernelView.as_view(
+            "job-branch-kernel-builds"),
+        methods=["GET"]
+    )
+
     add_rule(
         "/build/<string:job>/kernel/<string:kernel>/",
         view_func=vbuild.BuildsJobKernelView.as_view("job-kernel-builds"),
