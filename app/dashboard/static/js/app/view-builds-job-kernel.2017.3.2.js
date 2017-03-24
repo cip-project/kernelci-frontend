@@ -58,6 +58,13 @@ require([
                 ]), type);
         }
 
+        function _renderCommit(data, type, object) {
+            var gitURLs;
+
+            gitURLs = u.translateCommit(object.git_url, data);
+            return buildt.renderCommit(data, type, gitURLs[1]);
+        }
+
         results = response.result;
         if (results.length === 0) {
             html.removeElement(
@@ -81,6 +88,13 @@ require([
                     render: _renderKernel
                 },
                 {
+                    data: 'git_commit',
+                    title: 'Commit',
+                    type: 'string',
+                    className: 'commit-column',
+                    render: _renderCommit
+                },
+                {
                     data: 'created_on',
                     title: 'Date',
                     type: 'date',
@@ -101,7 +115,7 @@ require([
             gBuildsTables
                 .data(results)
                 .columns(columns)
-                .order([1, 'desc'])
+                .order([3, 'desc'])
                 .rowURL(
                     '/build/%(job)s/branch/%(git_branch)s/kernel/%(kernel)s/')
                 .rowURLElements(['job', 'git_branch', 'kernel'])
@@ -126,7 +140,9 @@ require([
                     'job',
                     'kernel',
                     'created_on',
-                    'git_branch'
+                    'git_branch',
+                    'git_commit',
+                    'git_url'
                 ],
                 limit: gNumberRange
             };
