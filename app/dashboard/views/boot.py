@@ -58,8 +58,8 @@ class BootAllJobKernelDefconfigView(BootGeneralView):
 
         page_title = self.BOOT_PAGES_TITLE + ""
         body_title = (
-            "Boot Reports for &#171;%(job)s - %(kernel)s&#187;&nbsp;"
-            "<small>(%(defconfig)s)</small>" % kwargs
+            "Boot Reports: &#171;{job} &ndash; {kernel}&#187;&nbsp;"
+            "<small>({defconfig})</small>".format(**kwargs)
         )
         search_filter, page_len = get_search_parameters(request)
 
@@ -68,6 +68,29 @@ class BootAllJobKernelDefconfigView(BootGeneralView):
             page_title=page_title,
             body_title=body_title,
             job=kwargs["job"],
+            kernel=kwargs["kernel"],
+            defconfig=kwargs["defconfig"],
+            search_filter=search_filter,
+            page_len=page_len
+        )
+
+
+class BootAllJBKDView(BootGeneralView):
+    def dispatch_request(self, **kwargs):
+
+        page_title = self.BOOT_PAGES_TITLE + ""
+        body_title = (
+            "Boot Reports: &#171;{job} &ndash; {kernel}&#187;&nbsp;"
+            "<small>({branch} &ndash; {defconfig})</small>".format(**kwargs)
+        )
+        search_filter, page_len = get_search_parameters(request)
+
+        return render_template(
+            "boots-all-job-branch-kernel-defconfig.html",
+            page_title=page_title,
+            body_title=body_title,
+            job=kwargs["job"],
+            branch=kwargs["branch"],
             kernel=kwargs["kernel"],
             defconfig=kwargs["defconfig"],
             search_filter=search_filter,
