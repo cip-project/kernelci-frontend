@@ -135,7 +135,7 @@ require([
             $.when(deferred)
                 .fail(e.error, getBootsFail)
                 .done(getBootsDone);
-        }, 10);
+        }, 25);
     }
 
     function setupData() {

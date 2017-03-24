@@ -15,7 +15,7 @@ require([
 
     setTimeout(function() {
         document.getElementById('li-build').setAttribute('class', 'active');
-    }, 5);
+    }, 15);
 
     function getBuildLogsFail() {
         html.removeElement(document.getElementById('build-logs-loading'));
@@ -532,8 +532,8 @@ require([
         gBuildId = document.getElementById('build-id').value;
     }
 
-    setTimeout(getBuild, 0);
+    setTimeout(getBuild, 10);
 
-    init.hotkeys();
-    init.tooltip();
+    setTimeout(init.hotkeys, 50);
+    setTimeout(init.tooltip, 50);
 });
