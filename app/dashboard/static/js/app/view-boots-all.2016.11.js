@@ -34,7 +34,7 @@ require([
 
         results = response.result;
         if (results.length > 0) {
-            setTimeout(gBootsTable.addRows.bind(gBootsTable, results), 7);
+            setTimeout(gBootsTable.addRows.bind(gBootsTable, results), 9);
         }
 
         // Remove the loading banner when we get the last response.
@@ -101,7 +101,11 @@ require([
          * Wrapper to provide the href.
         **/
         function _renderTree(data, type) {
-            return tboot.renderTree(data, type, '/boot/all/job/' + data + '/');
+            var href = '/boot/all/job/';
+            href += data;
+            href += '/';
+
+            return tboot.renderTree(data, type, href);
         }
 
         results = response.result;
@@ -239,7 +243,8 @@ require([
         tableDivId: 'table-div',
         tableLoadingDivId: 'table-loading'
     });
-    setTimeout(getBoots, 0);
+
+    setTimeout(getBoots, 3);
 
     init.hotkeys();
     init.tooltip();

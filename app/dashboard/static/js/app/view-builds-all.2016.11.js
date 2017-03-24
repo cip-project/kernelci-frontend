@@ -17,7 +17,10 @@ require([
     var gPageLen;
     var gSearchFilter;
 
-    document.getElementById('li-build').setAttribute('class', 'active');
+    setTimeout(function() {
+        document
+            .getElementById('li-build').setAttribute('class', 'active');
+    }, 5);
 
     gDateRange = appconst.MAX_DATE_RANGE;
     gPageLen = null;
@@ -33,7 +36,7 @@ require([
 
         results = response.result;
         if (results.length > 0) {
-            setTimeout(gBuildsTable.addRows.bind(gBuildsTable, results), 7);
+            setTimeout(gBuildsTable.addRows.bind(gBuildsTable, results), 9);
         }
 
         // Remove the loading banner when we get the last response.
@@ -98,13 +101,21 @@ require([
         var results;
 
         function _renderKernel(data, type, object) {
-            return buildt.renderKernel(
-                data, type, '/build/' + object.job + '/kernel/' + data + '/');
+            var href = '/build/';
+            href += object.job;
+            href += '/branch/';
+            href += object.git_branch;
+            href += '/kernel/';
+            href += data;
+            href += '/';
+            return buildt.renderKernel(data, type, href);
         }
 
         function _renderDetails(data, type, object) {
-            return buildt.renderDetails(
-                '/build/id/' + object._id.$oid + '/', type);
+            var href = '/build/id/';
+            href += object._id.$oid;
+            href += '/';
+            return buildt.renderDetails(href, type);
         }
 
         results = response.result;
@@ -228,7 +239,8 @@ require([
         tableLoadingDivId: 'table-loading',
         tableDivId: 'table-div'
     });
-    setTimeout(getBuilds, 0);
+
+    setTimeout(getBuilds, 3);
 
     init.hotkeys();
     init.tooltip();
