@@ -18,7 +18,7 @@ require([
 
     setTimeout(function() {
         document.getElementById('li-build').setAttribute('class', 'active');
-    }, 0);
+    }, 5);
 
     function getBisectFail() {
         html.removeElement(
@@ -135,15 +135,16 @@ require([
                 html.removeClass(
                     document.getElementById('bisect-div'), 'hidden');
 
-                deferred = r.get(
-                    '/_ajax/bisect?collection=build&build_id=' +
-                        results._id.$oid,
-                    {}
-                );
-
-                $.when(deferred)
-                    .fail(e.error, getBisectFail)
-                    .done(getBisectDone, getBisectCompareTo);
+                setTimeout(function() {
+                    deferred = r.get(
+                        '/_ajax/bisect?collection=build&build_id=' +
+                            results._id.$oid,
+                        {}
+                    );
+                    $.when(deferred)
+                        .fail(e.error, getBisectFail)
+                        .done(getBisectDone, getBisectCompareTo);
+                }, 10);
             } else {
                 html.removeElement(document.getElementById('bisect-div'));
             }
@@ -255,43 +256,21 @@ require([
             if (results._id !== null) {
                 data = {
                     build_id: results._id.$oid,
-                    field: [
-                        '_id',
-                        'arch',
-                        'board',
-                        'boot_result_description',
-                        'boot_log',
-                        'boot_log_html',
-                        'file_server_url',
-                        'file_server_resource',
-                        'version',
-                        'job', 'kernel', 'defconfig_full', 'lab_name', 'status'
-                    ]
                 };
             } else {
                 data = {
                     defconfig: results.defconfig,
                     defconfig_full: results.defconfig_full,
-                    field: [
-                        '_id',
-                        'arch',
-                        'board',
-                        'boot_result_description',
-                        'boot_log',
-                        'boot_log_html',
-                        'file_server_url',
-                        'file_server_resource',
-                        'version',
-                        'job', 'kernel', 'defconfig_full', 'lab_name', 'status'
-                    ],
                     job: results.job,
                     kernel: results.kernel
                 };
             }
 
-            $.when(r.get('/_ajax/boot', data))
-                .fail(e.error, getBootsFail)
-                .done(getBootsDone);
+            setTimeout(function() {
+                $.when(r.get('/_ajax/boot', data))
+                    .fail(e.error, getBootsFail)
+                    .done(getBootsDone);
+            }, 10);
         }
     }
 
@@ -333,6 +312,7 @@ require([
         var gitCommit;
         var gitURL;
         var gitURLs;
+        var href;
         var job;
         var kernel;
         var kernelConfig;
@@ -344,6 +324,7 @@ require([
         var spanNode;
         var systemMap;
         var systemMapSize;
+        var str;
         var textOffset;
         var tooltipNode;
         var translatedUri;
@@ -450,19 +431,25 @@ require([
             tooltipNode.setAttribute('title', 'Details for tree&nbsp;' + job);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute(
-                'href', urls.createPathHref(['/job/', job, '/']));
+            href = '/job/';
+            href += job;
+            href += '/';
+            aNode.setAttribute('href', href);
             aNode.appendChild(document.createTextNode(job));
 
             spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
 
             tooltipNode = spanNode.appendChild(html.tooltip());
-            tooltipNode.setAttribute(
-                'title', 'Boot reports for tree&nbsp;' + job);
+            str = 'Boot reports for tree';
+            str += '&nbsp;';
+            str += job;
+            tooltipNode.setAttribute('title', str);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute(
-                'href', urls.createPathHref(['/boot/all/job/', job, '/']));
+            href = '/boot/all/job/';
+            href += job;
+            href += '/';
+            aNode.setAttribute('href', href);
             aNode.appendChild(html.boot());
 
             html.replaceContent(document.getElementById('tree'), docFrag);
@@ -470,22 +457,29 @@ require([
             // Branch.
             html.replaceContent(
                 document.getElementById('git-branch'),
-                document.createTextNode(results.git_branch));
+                document.createTextNode(branch));
 
             docFrag = document.createDocumentFragment();
             spanNode = docFrag.appendChild(document.createElement('span'));
 
             tooltipNode = spanNode.appendChild(html.tooltip());
-            tooltipNode.setAttribute(
-                'title',
-                'Build details for&nbsp;' + job +
-                '&nbsp;&dash;&nbsp;' + kernel
-            );
+            str = 'Build details for';
+            str +='&nbsp;';
+            str += job;
+            str += '&nbsp;&ndash;&nbsp;';
+            str += kernel;
+            str += '&nbsp;(';
+            str += branch;
+            str += ')';
+            tooltipNode.setAttribute('title', str);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute(
-                'href',
-                urls.createPathHref(['/build/', job, '/kernel/', kernel, '/']));
+            href = '/build/';
+            href += job;
+            href += '/kernel/';
+            href += kernel;
+            href += '/';
+            aNode.setAttribute('href', href);
             aNode.appendChild(document.createTextNode(kernel));
 
             spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
@@ -494,14 +488,16 @@ require([
             tooltipNode.setAttribute(
                 'title',
                 'Boot reports for&nbsp;' + job +
-                '&nbsp;&dash;&nbsp;' + kernel
+                '&nbsp;&ndash;&nbsp;' + kernel
             );
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute(
-                'href', urls.createPathHref([
-                    '/boot/all/job/', job, '/kernel/', kernel, '/'
-                ]));
+            href = '/boot/all/job/';
+            href += job;
+            href += '/kernel/';
+            href += kernel;
+            href += '/';
+            aNode.setAttribute('href', href);
             aNode.appendChild(html.boot());
 
             html.replaceContent(
@@ -630,17 +626,14 @@ require([
                 );
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute(
-                'href',
-                urls.createPathHref([
-                    '/boot/all/job/',
-                    job,
-                    '/kernel/',
-                    kernel,
-                    '/defconfig/',
-                    defconfigFull,
-                    '/'
-                ]));
+            href = '/boot/all/job/';
+            href += job;
+            href += '/kernel/';
+            href += kernel;
+            href += '/defconfig/';
+            href += defconfigFull;
+            href += '/';
+            aNode.setAttribute('href', href);
             aNode.appendChild(html.boot());
 
             html.replaceContent(
@@ -921,7 +914,7 @@ require([
         gBuildId = document.getElementById('build-id').value;
     }
 
-    setTimeout(getBuilds, 0);
+    setTimeout(getBuilds, 3);
 
     init.hotkeys();
     init.tooltip();

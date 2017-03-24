@@ -217,21 +217,23 @@ require([
 
         result = response.result[0];
 
-        deferred = r.get(
-            '/_ajax/boot',
-            {
-                board: result.board,
-                defconfig_full: result.defconfig_full,
-                job: result.job,
-                kernel: result.kernel
-            }
-        );
-        $.when(deferred)
-            .fail(e.error, getMultiLabDataFail)
-            .done(function(data) {
-                setTimeout(
-                    getMultiLabDataDone.bind(null, data, result.lab_name), 0);
-            });
+        setTimeout(function() {
+            deferred = r.get(
+                '/_ajax/boot',
+                {
+                    board: result.board,
+                    defconfig_full: result.defconfig_full,
+                    job: result.job,
+                    kernel: result.kernel
+                }
+            );
+
+            $.when(deferred)
+                .fail(e.error, getMultiLabDataFail)
+                .done(function(data) {
+                    getMultiLabDataDone(data, result.lab_name);
+                });
+        }, 10);
     }
 
     function getBootDataFail() {
@@ -370,17 +372,20 @@ require([
             isCompared: true
         };
 
-        deferred = r.get(
-            '/_ajax/bisect?collection=boot&compare_to=mainline&boot_id=' +
-            bBootId,
-            {}
-        );
-        $.when(deferred)
-            .fail(e.error, getBisectCompareToMainlineFail)
-            .done(function(data) {
-                settings.data = data;
-                bisect(settings).draw();
-            });
+        setTimeout(function() {
+            deferred = r.get(
+                '/_ajax/bisect?collection=boot&compare_to=mainline&boot_id=' +
+                bBootId,
+                {}
+            );
+
+            $.when(deferred)
+                .fail(e.error, getBisectCompareToMainlineFail)
+                .done(function(data) {
+                    settings.data = data;
+                    bisect(settings).draw();
+                });
+        }, 10);
     }
 
     function getBisectCompareTo(response) {
@@ -450,16 +455,18 @@ require([
                 bisectShowHideID: 'bisect-hide-div'
             };
 
-            deferred = r.get(
-                '/_ajax/bisect?collection=boot&boot_id=' + lBootId, {});
+            setTimeout(function() {
+                deferred = r.get(
+                    '/_ajax/bisect?collection=boot&boot_id=' + lBootId, {});
 
-            $.when(deferred)
-                .fail(e.error, getBisectDataFail)
-                .done(getBisectCompareTo)
-                .done(function(data) {
-                    settings.data = data;
-                    bisect(settings).draw();
-                });
+                $.when(deferred)
+                    .fail(e.error, getBisectDataFail)
+                    .done(getBisectCompareTo)
+                    .done(function(data) {
+                        settings.data = data;
+                        bisect(settings).draw();
+                    });
+            }, 10);
         }
     }
 
@@ -602,6 +609,7 @@ require([
         var boardInstance;
         var bootLog;
         var bootTime;
+        var branch;
         var compiler;
         var compilerVersion;
         var compilerVersionFull;
@@ -642,6 +650,7 @@ require([
         board = result.board;
         boardInstance = result.board_instance;
         job = result.job;
+        branch = result.git_branch;
         kernel = result.kernel;
         defconfigFull = result.defconfig_full;
         arch = result.arch;
@@ -699,11 +708,10 @@ require([
         tooltipNode.setAttribute('title', str);
 
         aNode = tooltipNode.appendChild(document.createElement('a'));
-        aNode.setAttribute('href', u.createPathHref([
-            '/boot/all/lab/',
-            lab,
-            '/'
-        ]));
+        str = '/boot/all/lab/';
+        str += lab;
+        str += '/';
+        aNode.setAttribute('href', str);
         aNode.appendChild(document.createTextNode(lab));
         aNode.insertAdjacentHTML('beforeend', '&nbsp;');
         aNode.appendChild(html.search());
@@ -718,11 +726,10 @@ require([
         tooltipNode.setAttribute('title', str);
 
         aNode = tooltipNode.appendChild(document.createElement('a'));
-        aNode.setAttribute('href', u.createPathHref([
-            '/boot/',
-            board,
-            '/'
-        ]));
+        str = '/boot/';
+        str += board;
+        str += '/';
+        aNode.setAttribute('href', str);
         aNode.appendChild(document.createTextNode(board));
         aNode.insertAdjacentHTML('beforeend', '&nbsp;');
         aNode.appendChild(html.search());
@@ -751,11 +758,10 @@ require([
         tooltipNode.setAttribute('title', str);
 
         aNode = tooltipNode.appendChild(document.createElement('a'));
-        aNode.setAttribute('href', u.createPathHref([
-            '/boot/all/job/',
-            job,
-            '/'
-        ]));
+        str += '/boot/all/job/';
+        str += job;
+        str += '/';
+        aNode.setAttribute('href', str);
         aNode.appendChild(document.createTextNode(job));
 
         spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
@@ -766,11 +772,10 @@ require([
         tooltipNode.setAttribute('title', str);
 
         aNode = tooltipNode.appendChild(document.createElement('a'));
-        aNode.setAttribute('href', u.createPathHref([
-            '/job',
-            job,
-            '/'
-        ]));
+        str = '/job/';
+        str += job;
+        str += '/';
+        aNode.setAttribute('href', str);
         aNode.insertAdjacentHTML('beforeend', '&nbsp;');
         aNode.appendChild(html.tree());
 
@@ -779,7 +784,7 @@ require([
         // Branch.
         html.replaceContent(
             document.getElementById('dd-board-branch'),
-            document.createTextNode(result.git_branch));
+            document.createTextNode(branch));
 
         // Kernel.
         docFrag = document.createDocumentFragment();
@@ -793,13 +798,12 @@ require([
         tooltipNode.setAttribute('title', str);
 
         aNode = tooltipNode.appendChild(document.createElement('a'));
-        aNode.setAttribute('href', u.createPathHref([
-            '/boot/all/job',
-            job,
-            'kernel',
-            kernel,
-            '/'
-        ]));
+        str = '/boot/all/job';
+        str += job;
+        str += 'kernel';
+        str += kernel;
+        str += '/';
+        aNode.setAttribute('href', str);
         aNode.appendChild(document.createTextNode(kernel));
 
         spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
@@ -812,13 +816,14 @@ require([
         tooltipNode.setAttribute('title', str);
 
         aNode = tooltipNode.appendChild(document.createElement('a'));
-        aNode.setAttribute('href', u.createPathHref([
-            '/build',
-            job,
-            'kernel',
-            kernel,
-            '/',
-        ]));
+        str = '/build/';
+        str += job;
+        str += '/branch/';
+        str += branch;
+        str += '/kernel/';
+        str += kernel;
+        str += '/';
+        aNode.setAttribute('href', str);
         aNode.insertAdjacentHTML('beforeend', '&nbsp;');
         aNode.appendChild(html.build());
 
@@ -832,17 +837,16 @@ require([
         tooltipNode.setAttribute('title', 'Boot reports');
 
         aNode = tooltipNode.appendChild(document.createElement('a'));
-        aNode.setAttribute('href', u.createPathHref([
-            '/boot',
-            board,
-            'job',
-            job,
-            'kernel',
-            kernel,
-            'defconfig',
-            defconfigFull,
-            '/'
-        ]));
+        str = '/boot/';
+        str += board;
+        str += '/job/';
+        str += job;
+        str += '/kernel/';
+        str += kernel;
+        str += '/defconfig/';
+        str += defconfigFull;
+        str += '/';
+        aNode.setAttribute('href', str);
         aNode.appendChild(document.createTextNode(defconfigFull));
 
         if (result.build_id) {
@@ -851,11 +855,10 @@ require([
             tooltipNode = spanNode.appendChild(html.tooltip());
             tooltipNode.setAttribute('title', 'Build details');
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute('href', u.createPathHref([
-                '/build/id/',
-                result.build_id.$oid,
-                '/'
-            ]));
+            str ='/build/id/';
+            str += result.build_id.$oid;
+            str += '/';
+            aNode.setAttribute('href', str);
             aNode.insertAdjacentHTML('beforeend', '&nbsp;');
             aNode.appendChild(html.build());
         }
@@ -913,11 +916,10 @@ require([
             tooltipNode.setAttribute('title', str);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute('href', u.createPathHref([
-                '/soc/',
-                soc,
-                '/'
-            ]));
+            str = '/soc/';
+            str += soc;
+            str += '/';
+            aNode.setAttribute('href', str);
             aNode.appendChild(html.soc());
 
             html.replaceContent(
@@ -1098,10 +1100,7 @@ require([
     }
 
     function getBootData() {
-        var deferred;
-
-        deferred = r.get('/_ajax/boot', {id: gBootId});
-        $.when(deferred)
+        $.when(r.get('/_ajax/boot', {id: gBootId}))
             .fail(e.error, getBootDataFail, getMultiLabDataFail)
             .done(
                 getBootDataDone,
@@ -1118,7 +1117,7 @@ require([
         gDateRange = document.getElementById('date-range').value;
     }
 
-    setTimeout(getBootData, 0);
+    setTimeout(getBootData, 3);
 
     init.hotkeys();
     init.tooltip();
