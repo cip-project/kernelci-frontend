@@ -212,8 +212,21 @@ def init():
         methods=["GET"]
     )
     add_rule(
+        (
+            "/boot/all/job/<string:job>/branch/<string:branch>/"
+            "kernel/<string:kernel>/"
+        ),
+        view_func=vboot.BootAllJBKView.as_view("boot-all-jbk"),
+        methods=["GET"]
+    )
+    add_rule(
         "/boot/all/job/<string:job>/kernel/latest/",
         view_func=vboot.BootJobKernelView.as_view("boot-job-kernel-latest"),
+        methods=["GET"]
+    )
+    add_rule(
+        "/boot/all/job/<string:job>/branch/<string:branch>/kernel/latest/",
+        view_func=vboot.BootAllJBKView.as_view("boot-all-jbk-latest"),
         methods=["GET"]
     )
     add_rule(
