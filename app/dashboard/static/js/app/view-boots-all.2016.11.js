@@ -18,7 +18,7 @@ require([
 
     setTimeout(function() {
         document.getElementById('li-boot').setAttribute('class', 'active');
-    }, 0);
+    }, 5);
 
     gSearchFilter = null;
     gPageLen = null;
@@ -34,7 +34,7 @@ require([
 
         results = response.result;
         if (results.length > 0) {
-            setTimeout(gBootsTable.addRows.bind(gBootsTable, results), 0);
+            setTimeout(gBootsTable.addRows.bind(gBootsTable, results), 7);
         }
 
         // Remove the loading banner when we get the last response.

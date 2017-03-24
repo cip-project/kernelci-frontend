@@ -33,9 +33,7 @@ require([
 
         results = response.result;
         if (results.length > 0) {
-            setTimeout(function() {
-                gBuildsTable.addRows(results);
-            }, 0);
+            setTimeout(gBuildsTable.addRows.bind(gBuildsTable, results), 7);
         }
 
         // Remove the loading banner when we get the last response.
