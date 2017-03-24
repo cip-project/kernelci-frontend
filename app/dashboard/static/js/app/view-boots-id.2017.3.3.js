@@ -798,7 +798,7 @@ require([
         tooltipNode.setAttribute('title', str);
 
         aNode = tooltipNode.appendChild(document.createElement('a'));
-        str = '/boot/all/job';
+        str = '/boot/all/job/';
         str += job;
         str += '/branch/';
         str += branch;
