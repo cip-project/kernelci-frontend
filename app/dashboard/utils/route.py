@@ -83,7 +83,7 @@ def init():
     add_rule(
         "/build/<string:tree>/branch/<string:branch>/kernel/latest/",
         view_func=vbuild.BuildsJobBranchKernelView.as_view(
-            "job-branch-kernel-builds"),
+            "job-branch-latest-builds"),
         methods=["GET"]
     )
 
