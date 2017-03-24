@@ -69,8 +69,7 @@ class BuildsJobKernelView(GeneralBuildsView):
         kernel = kwargs.get("kernel")
 
         body_title = (
-            "Build details for &#171;{}&#187;&nbsp;&ndash;&nbsp;".format(
-                job)
+            "Build Reports: &#171;{}&#187 &ndash;&nbsp;".format(job)
         )
 
         return render_template(
