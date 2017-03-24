@@ -15,7 +15,7 @@ require([
 
     setTimeout(function() {
         document.getElementById('li-build').setAttribute('class', 'active');
-    }, 0);
+    }, 5);
 
     function getBuildLogsFail() {
         html.removeElement(document.getElementById('build-logs-loading'));
@@ -139,19 +139,19 @@ require([
             if (errorsCount > 0) {
                 setTimeout(function() {
                     _parseLogStrings('Errors', results.errors, 'errors');
-                }, 50);
+                }, 75);
             }
 
             if (warningsCount > 0) {
                 setTimeout(function() {
                     _parseLogStrings('Warnings', results.warnings, 'warnings');
-                }, 50);
+                }, 75);
             }
 
             if (mismatchesCount > 0) {
                 setTimeout(function() {
                     _parseLogStrings('Mismatched', results.mismatches, 'mism');
-                }, 50);
+                }, 75);
             }
 
             html.removeElement(document.getElementById('build-logs-loading'));
@@ -166,15 +166,18 @@ require([
                 html.errorDiv('No data available.'));
             html.replaceByClassTxt('logs-loading-content', '?');
         } else {
-            $.when(r.get('/_ajax/build/' + gBuildId + '/logs', {}))
-                .fail(e.error, getBuildLogsFail)
-                .done(getBuildLogsDone);
-            }
+            setTimeout(function() {
+                $.when(r.get('/_ajax/build/' + gBuildId + '/logs', {}))
+                    .fail(e.error, getBuildLogsFail)
+                    .done(getBuildLogsDone);
+            }, 25);
+        }
     }
 
     function getBuildDone(response) {
         var aNode;
         var arch;
+        var branch;
         var buildLog;
         var buildTime;
         var createdOn;
@@ -189,6 +192,7 @@ require([
         var results;
         var serverURL;
         var spanNode;
+        var str;
         var tooltipNode;
         var translatedURI;
 
@@ -214,6 +218,7 @@ require([
             results = response.result[0];
             job = results.job;
             kernel = results.kernel;
+            branch = results.git_branch;
             gitURL = results.git_url;
             gitCommit = results.git_commit;
             arch = results.arch;
@@ -234,11 +239,10 @@ require([
             // The body title.
             docFrag = document.createDocumentFragment();
             spanNode = docFrag.appendChild(document.createElement('span'));
-
             spanNode.insertAdjacentHTML('beforeend', '&#171;');
             spanNode.appendChild(document.createTextNode(job));
             spanNode.insertAdjacentHTML('beforeend', '&#187;');
-            spanNode.insertAdjacentHTML('beforeend', '&nbsp;&dash;&nbsp;');
+            spanNode.insertAdjacentHTML('beforeend', '&nbsp;&ndash;&nbsp;');
             spanNode.insertAdjacentHTML('beforeend', '&#171;');
             spanNode.appendChild(document.createTextNode(kernel));
             spanNode.insertAdjacentHTML('beforeend', '&#187;');
@@ -246,8 +250,10 @@ require([
 
             defconfigNode = spanNode.appendChild(
                 document.createElement('small'));
-            defconfigNode.appendChild(
-                document.createTextNode('(' + results.defconfig + ')'));
+            str = '(';
+            str += results.defconfig;
+            str += ')';
+            defconfigNode.appendChild(document.createTextNode(str));
 
             document.getElementById('body-title').appendChild(docFrag);
 
@@ -256,22 +262,30 @@ require([
             spanNode = docFrag.appendChild(document.createElement('span'));
 
             tooltipNode = spanNode.appendChild(html.tooltip());
-            tooltipNode.setAttribute('title', 'Details for tree&nbsp;' + job);
+            str = 'Details for tree&nbsp;';
+            str += job;
+            tooltipNode.setAttribute('title', str);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute(
-                'href', urls.createPathHref(['/job/', job, '/']));
+            str = '/job/';
+            str += job;
+            str += '/';
+            aNode.setAttribute('href', str);
             aNode.appendChild(document.createTextNode(job));
 
             spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
 
             tooltipNode = spanNode.appendChild(html.tooltip());
-            tooltipNode.setAttribute(
-                'title', 'Boot reports for tree&nbsp;' + job);
+            str = 'Boot reports for tree';
+            str += '&nbsp;';
+            str += job;
+            tooltipNode.setAttribute('title', str);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute(
-                'href', urls.createPathHref(['/boot/all/job/', job, '/']));
+            str = '/boot/all/job/';
+            str += job;
+            str += '/';
+            aNode.setAttribute('href', str);
             aNode.appendChild(html.boot());
 
             html.replaceContent(document.getElementById('tree'), docFrag);
@@ -279,39 +293,56 @@ require([
             // Git branch.
             html.replaceContent(
                 document.getElementById('git-branch'),
-                document.createTextNode(results.git_branch));
+                document.createTextNode(branch));
 
             // Kernel.
             docFrag = document.createDocumentFragment();
             spanNode = docFrag.appendChild(document.createElement('span'));
 
             tooltipNode = spanNode.appendChild(html.tooltip());
-            tooltipNode.setAttribute(
-                'title',
-                'Build details for&nbsp;' + job +
-                '&nbsp;&dash;&nbsp;' + kernel
-            );
+            str = 'Build details for';
+            str += '&nbsp;';
+            str += job;
+            str += '&nbsp;&ndash;&nbsp;';
+            str += kernel;
+            str += '&nbsp;(';
+            str += branch;
+            str += ')';
+            tooltipNode.setAttribute('title', str);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute(
-                'href', urls.createPathHref([
-                    '/build/', job, '/kernel/', kernel, '/'
-                ]));
+            str = '/build/';
+            str += job;
+            str += '/branch/';
+            str += branch;
+            str += '/kernel/';
+            str += kernel;
+            str += '/';
+            aNode.setAttribute('href', str);
             aNode.appendChild(document.createTextNode(kernel));
 
             spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
 
             tooltipNode = spanNode.appendChild(html.tooltip());
-            tooltipNode.setAttribute(
-                'title',
-                'Boot reports for&nbsp;' + job +
-                '&nbsp;&dash;&nbsp;' + kernel
-            );
+            str = 'Boot reports for';
+            str += '&nbsp;';
+            str += job;
+            str += '&nbsp;&ndash;&nbsp;';
+            str += kernel;
+            str += '&nbsp;(';
+            str += branch;
+            str += ')';
+            tooltipNode.setAttribute('title', str);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute(
-                'href', urls.createPathHref([
-                    '/boot/all/job/', job, '/kernel/', kernel, '/']));
+            str = '/boot/all/job/';
+            str += job;
+            str += '/branch/';
+            str += branch;
+            str += '/kernel/';
+            str += kernel;
+            str += '/';
+            aNode.setAttribute('href', str);
             aNode.appendChild(html.boot());
 
             html.replaceContent(
@@ -325,25 +356,29 @@ require([
             spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
 
             tooltipNode = spanNode.appendChild(html.tooltip());
-            tooltipNode.setAttribute(
-                'title',
-                'Boot reports for&nbsp;' + job +
-                    '&nbsp;&dash;&nbsp;' + kernel +
-                    '&nbsp;&dash;&nbsp;' + defconfigFull
-                );
+            str = 'Boot reports for';
+            str += '&nbsp;';
+            str += job;
+            str += '&nbsp;&ndash;&nbsp;';
+            str += kernel;
+            str += '&nbsp;(';
+            str += branch;
+            str += '&nbsp;&ndash;&nbsp';
+            str += defconfigFull;
+            str += ')';
+            tooltipNode.setAttribute('title', str);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
-            aNode.setAttribute(
-                'href',
-                urls.createPathHref([
-                    '/boot/all/job/',
-                    job,
-                    '/kernel/',
-                    kernel,
-                    '/defconfig/',
-                    defconfigFull,
-                    '/'
-                 ]));
+            str = '/boot/all/job/';
+            str += job;
+            str += '/branch/';
+            str += branch;
+            str += '/kernel/';
+            str += kernel;
+            str += '/defconfig/';
+            str += defconfigFull;
+            str += '/';
+            aNode.setAttribute('href', str);
             aNode.appendChild(html.boot());
 
             html.replaceContent(

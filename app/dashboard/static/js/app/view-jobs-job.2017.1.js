@@ -280,32 +280,37 @@ require([
          * Wrapper to provide the href.
         **/
         function _renderDetails(data, type, object) {
-            return jobt.renderDetails(
-                u.createPathHref([
-                    '/build/',
-                    gJobName,
-                    'branch',
-                    object.git_branch,
-                    'kernel',
-                    data,
-                    '/'
-                ]), type);
+            var href = '/build/';
+            href += gJobName;
+            href += '/branch/';
+            href += object.git_branch;
+            href += '/kernel/';
+            href += data;
+            href += '/';
+            return jobt.renderDetails(href, type);
         }
 
         /**
          * Wrapper to provide the href.
         **/
         function _renderBootCount(data, type) {
-            return jobt.renderTableBootCount(
-                data, type, '/boot/all/job/' + gJobName + '/kernel/' + data);
+            var href = '/boot/all/job/';
+            href += gJobName;
+            href += '/kernel/';
+            href += data;
+            return jobt.renderTableBootCount(data, type, href);
         }
 
         /**
          * Wrapper to provide the href.
         **/
         function _renderKernel(data, type) {
-            return jobt.renderKernel(
-                data, type, '/build/' + gJobName + '/kernel/' + data + '/');
+            var href = '/build/';
+            href += gJobName;
+            href += '/kernel/';
+            href += data;
+            href += '/';
+            return jobt.renderKernel(data, type, href);
         }
 
         /**
@@ -319,10 +324,11 @@ require([
         }
 
         function _renderBranch(data, type) {
-            var aNode,
-                branch,
-                rendered,
-                tooltipNode;
+            var aNode;
+            var branch;
+            var rendered;
+            var tooltipNode;
+            var href;
 
             branch = data.replace(gBranchRegEx, ':', 'g');
             rendered = data;
@@ -332,8 +338,11 @@ require([
 
                 aNode = document.createElement('a');
                 aNode.className = 'table-link';
-                aNode.setAttribute(
-                    'href', '/job/' + gJobName + '/branch/' + branch);
+                href = '/job/';
+                href += gJobName;
+                href += '/branch/';
+                href += branch;
+                aNode.setAttribute('href', href);
 
                 aNode.appendChild(document.createTextNode(data));
                 tooltipNode.appendChild(aNode);
@@ -409,7 +418,9 @@ require([
                 .data(results)
                 .columns(columns)
                 .order([5, 'desc'])
-                .rowURLElements(['job', 'kernel'])
+                .rowURL(
+                    '/build/%(job)s/branch/%(git_branch)s/kernel/%(kernel)s/')
+                .rowURLElements(['job', 'git_branch', 'kernel'])
                 .paging(false)
                 .info(false)
                 .draw();

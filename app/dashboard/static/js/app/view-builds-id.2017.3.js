@@ -62,18 +62,20 @@ require([
             isCompared: true
         };
 
-        deferred = r.get(
-            '/_ajax/bisect?collection=build&' +
-                'compare_to=mainline&build_id=' + build,
-            {}
-        );
+        setTimeout(function() {
+            deferred = r.get(
+                '/_ajax/bisect?collection=build&' +
+                    'compare_to=mainline&build_id=' + build,
+                {}
+            );
 
-        $.when(deferred)
-            .fail(e.error, getBisectToMainlineFail)
-            .done(function(data) {
-                settings.data = data;
-                bisect(settings).draw();
-            });
+            $.when(deferred)
+                .fail(e.error, getBisectToMainlineFail)
+                .done(function(data) {
+                    settings.data = data;
+                    bisect(settings).draw();
+                });
+        }, 10);
     }
 
     function getBisectCompareTo(response) {
@@ -476,6 +478,8 @@ require([
             aNode = tooltipNode.appendChild(document.createElement('a'));
             href = '/build/';
             href += job;
+            href += '/branch/';
+            href += branch;
             href += '/kernel/';
             href += kernel;
             href += '/';
@@ -485,15 +489,21 @@ require([
             spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
 
             tooltipNode = spanNode.appendChild(html.tooltip());
-            tooltipNode.setAttribute(
-                'title',
-                'Boot reports for&nbsp;' + job +
-                '&nbsp;&ndash;&nbsp;' + kernel
-            );
+            str = 'Boot reports for';
+            str += '&nbsp;';
+            str += job;
+            str += '&nbsp;&ndash;&nbsp;';
+            str += kernel;
+            str += '&nbsp;(';
+            str += branch;
+            str += ')';
+            tooltipNode.setAttribute('title', str);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
             href = '/boot/all/job/';
             href += job;
+            href += '/branch/';
+            href += branch;
             href += '/kernel/';
             href += kernel;
             href += '/';
@@ -618,16 +628,23 @@ require([
 
             spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
             tooltipNode = spanNode.appendChild(html.tooltip());
-            tooltipNode.setAttribute(
-                'title',
-                'Boot reports for&nbsp;' + job +
-                    '&nbsp;&dash;&nbsp;' + kernel +
-                    '&nbsp;&dash;&nbsp;' + defconfigFull
-                );
+            str = 'Boot reports for';
+            str += '&nbsp;';
+            str += job;
+            str += '&nbsp;&ndash;&nbsp;';
+            str += kernel;
+            str += '&nbsp;(';
+            str += branch;
+            str += '&nbsp;&ndash;&nbsp';
+            str += defconfigFull;
+            str += ')';
+            tooltipNode.setAttribute('title', str);
 
             aNode = tooltipNode.appendChild(document.createElement('a'));
             href = '/boot/all/job/';
             href += job;
+            href += '/branch/';
+            href += branch;
             href += '/kernel/';
             href += kernel;
             href += '/defconfig/';
