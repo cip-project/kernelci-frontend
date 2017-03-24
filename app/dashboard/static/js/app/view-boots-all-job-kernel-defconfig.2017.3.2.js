@@ -6,9 +6,8 @@ require([
     'utils/request',
     'utils/table',
     'utils/html',
-    'utils/urls',
     'tables/boot'
-], function($, init, e, r, table, html, urls, tboot) {
+], function($, init, e, r, table, html, tboot) {
     'use strict';
     var gBootsTable;
     var gDefconfigFull;
@@ -18,7 +17,10 @@ require([
     var gPageLen;
     var gSearchFilter;
 
-    document.getElementById('li-boot').setAttribute('class', 'active');
+    setTimeout(function() {
+        document.getElementById('li-boot').setAttribute('class', 'active');
+    }, 10);
+
     gPageLen = null;
     gSearchFilter = null;
     gFileServer = null;
@@ -127,33 +129,41 @@ require([
     function getBoots() {
         var deferred;
 
-        deferred = r.get(
-            '/_ajax/boot',
-            {
-                job: gJobName,
-                kernel: gKernelName,
-                defconfig_full: gDefconfigFull
-            }
-        );
-        $.when(deferred)
-            .fail(e.error, getBootsFail)
-            .done(getBootsDone);
+        setTimeout(function() {
+            deferred = r.get(
+                '/_ajax/boot',
+                {
+                    job: gJobName,
+                    kernel: gKernelName,
+                    defconfig_full: gDefconfigFull
+                }
+            );
+            $.when(deferred)
+                .fail(e.error, getBootsFail)
+                .done(getBootsDone);
+        }, 10);
     }
 
     function setupData() {
         var aNode;
         var spanNode;
+        var str;
         var tooltipNode;
 
         // Add the tree data.
         spanNode = document.createElement('span');
 
         tooltipNode = html.tooltip();
-        tooltipNode.setAttribute('title', 'Boot details for&nbsp;' + gJobName);
+        str = 'Boot details for';
+        str += '&nbsp;';
+        str += gJobName;
+        tooltipNode.setAttribute('title', str);
 
         aNode = document.createElement('a');
-        aNode.setAttribute(
-            'href', urls.createPathHref(['/boot/all/job/', gJobName, '/']));
+        str = '/boot/all/job/';
+        str += gJobName;
+        str += '/';
+        aNode.setAttribute('href', str);
         aNode.appendChild(document.createTextNode(gJobName));
 
         tooltipNode.appendChild(aNode);
@@ -162,11 +172,16 @@ require([
         spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
 
         tooltipNode = html.tooltip();
-        tooltipNode.setAttribute('title', 'Details for job&nbsp;' + gJobName);
+        str = 'Details for job';
+        str += '&nbsp;';
+        str += gJobName;
+        tooltipNode.setAttribute('title', str);
 
         aNode = document.createElement('a');
-        aNode.setAttribute(
-            'href', urls.createPathHref(['/job/', gJobName, '/']));
+        str = '/job/';
+        str += gJobName;
+        str += '/';
+        aNode.setAttribute('href', str);
 
         aNode.appendChild(html.tree());
         tooltipNode.appendChild(aNode);
@@ -178,18 +193,20 @@ require([
         spanNode = document.createElement('span');
 
         tooltipNode = html.tooltip();
-        tooltipNode.setAttribute(
-            'title',
-            'Boot reports for&nbsp;' + gJobName +
-                '&nbsp;&dash;&nbsp;' + gKernelName
-        );
+        str = 'Boot reports for';
+        str += '&nbsp;';
+        str += gJobName;
+        str += '&nbsp;&ndash;&nbsp;';
+        str += gKernelName;
+        tooltipNode.setAttribute('title', str);
 
         aNode = document.createElement('a');
-        aNode.setAttribute(
-            'href',
-            urls.createPathHref([
-                '/boot/all/job/', gJobName, '/kernel/', gKernelName, '/'
-            ]));
+        str ='/boot/all/job/';
+        str += gJobName;
+        str += '/kernel/';
+        str += gKernelName;
+        str += '/';
+        aNode.setAttribute('href', str);
         aNode.appendChild(document.createTextNode(gKernelName));
 
         tooltipNode.appendChild(aNode);
@@ -198,18 +215,20 @@ require([
         spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
 
         tooltipNode = html.tooltip();
-        tooltipNode.setAttribute(
-            'title',
-            'Build reports for&nbsp;' + gJobName +
-                '&nbsp;&dash;&nbsp;' + gKernelName
-        );
+        str = 'Build reports for';
+        str += '&nbsp;';
+        str += gJobName;
+        str += '&nbsp;&ndash;&nbsp;';
+        str += gKernelName;
+        tooltipNode.setAttribute('title', str);
 
         aNode = document.createElement('a');
-        aNode.setAttribute(
-            'href',
-            urls.createPathHref([
-                '/build/', gJobName, '/kernel/', gKernelName, '/'
-            ]));
+        str = '/build/';
+        str += gJobName;
+        str += '/kernel/';
+        str += gKernelName;
+        str += '/';
+        aNode.setAttribute('href', str);
 
         aNode.appendChild(html.build());
         tooltipNode.appendChild(aNode);
@@ -248,8 +267,9 @@ require([
         tableDivId: 'table-div',
         tableLoadingDivId: 'table-loading'
     });
-    setupData();
-    getBoots();
+
+    setTimeout(setupData, 25);
+    setTimeout(getBoots, 25);
 
     init.hotkeys();
     init.tooltip();

@@ -110,7 +110,7 @@ class BuildsJobKernelDefconfigView(GeneralBuildsView):
             return redirect(url_for("build-id", **{"uid": build_id}), code=301)
         else:
             body_title = (
-                u"Build reports for &#171;{job:s}&#187; &dash; {kernel:s}"
+                u"Build Reports: &#171;{job:s}&#187; &ndash; {kernel:s}"
             ).format(**kwargs)
 
             return render_template(
