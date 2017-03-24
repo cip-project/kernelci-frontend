@@ -13,12 +13,12 @@ require([
     'utils/date'
 ], function($, init, format, r, e, table, u, chart, html, jobt) {
     'use strict';
-    var gBranchRegEx,
-        gBuildsTable,
-        gJobName,
-        gNumberRange,
-        gPageLen,
-        gSearchFilter;
+    var gBranchRegEx;
+    var gBuildsTable;
+    var gJobName;
+    var gNumberRange;
+    var gPageLen;
+    var gSearchFilter;
 
     document.getElementById('li-job').setAttribute('class', 'active');
 
@@ -42,8 +42,7 @@ require([
     }
 
     function getBootStats(startDate, dateRange) {
-        var deferred,
-            data;
+        var data;
 
         data = {
             job: gJobName,
@@ -55,8 +54,7 @@ require([
             nfield: ['_id']
         };
 
-        deferred = r.get('/_ajax/boot', data);
-        $.when(deferred)
+        $.when(r.get('/_ajax/boot', data))
             .fail(e.error, getBootStatsFail)
             .done(getBootStatsDone);
     }
@@ -72,8 +70,7 @@ require([
     }
 
     function getBuildsStats(startDate, dateRange) {
-        var deferred,
-            data;
+        var data;
 
         data = {
             job: gJobName,
@@ -85,18 +82,17 @@ require([
             nfield: ['_id']
         };
 
-        deferred = r.get('/_ajax/build', data);
-        $.when(deferred)
+        $.when(r.get('/_ajax/build', data))
             .fail(e.error, getBuildsStatsFail)
             .done(getBuildsStatsDone);
     }
 
     function getTrendsData(response) {
-        var firstDate,
-            lDateRange,
-            lastDate,
-            resLen,
-            results;
+        var firstDate;
+        var lDateRange;
+        var lastDate;
+        var resLen;
+        var results;
 
         results = response.result;
         resLen = results.length;
@@ -428,8 +424,7 @@ require([
     }
 
     function getBuilds() {
-        var data,
-            deferred;
+        var data;
 
         data = {
             aggregate: 'kernel',
@@ -440,12 +435,10 @@ require([
             field: [
                 'job',
                 'kernel', 'created_on', 'git_branch', 'git_commit', 'git_url'
-            ],
-            nfield: ['_id']
+            ]
         };
 
-        deferred = r.get('/_ajax/build', data);
-        $.when(deferred)
+        $.when(r.get('/_ajax/build', data))
             .fail(
                 e.error,
                 getBuildsFailed, getBuildsStatsFail, getBootStatsFail)
@@ -453,14 +446,14 @@ require([
     }
 
     function getDetailsDone(response) {
-        var firstCount,
-            firstResult,
-            resLen,
-            results,
-            secondCount,
-            secondResult,
-            thirdCount,
-            thirdResult;
+        var firstCount;
+        var firstResult;
+        var resLen;
+        var results;
+        var secondCount;
+        var secondResult;
+        var thirdCount;
+        var thirdResult;
 
         results = response.result;
         resLen = results.length;
@@ -495,9 +488,9 @@ require([
     }
 
     function getDetails() {
-        var batchOps,
-            deferred,
-            queryString;
+        var batchOps;
+        var deferred;
+        var queryString;
 
         queryString = 'job=' + gJobName;
         batchOps = [];
@@ -552,8 +545,9 @@ require([
         tableLoadingDivId: 'table-loading',
         tableDivId: 'table-div'
     });
-    getDetails();
-    getBuilds();
+
+    setTimeout(getDetails, 10);
+    setTimeout(getBuilds, 10);
 
     init.hotkeys();
     init.tooltip();

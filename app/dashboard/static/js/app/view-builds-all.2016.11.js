@@ -179,7 +179,6 @@ require([
                 .data(results)
                 .columns(columns)
                 .order([5, 'desc'])
-                .languageLengthMenu('build reports per page')
                 .rowURL('/build/id/%(_id)s/')
                 .rowURLElements(['_id'])
                 .draw();
