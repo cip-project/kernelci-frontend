@@ -53,12 +53,6 @@ require([
         } else {
             columns = [
                 {
-                    data: '_id',
-                    visible: false,
-                    searchable: false,
-                    orderable: false
-                },
-                {
                     data: 'board',
                     title: 'Board Model',
                     type: 'string',
@@ -114,7 +108,7 @@ require([
             gBootsTable
                 .data(results)
                 .columns(columns)
-                .order([5, 'desc'])
+                .order([4, 'desc'])
                 .languageLengthMenu('boot reports per page')
                 .rowURL('/boot/id/%(_id)s/')
                 .rowURLElements(['_id'])

@@ -29,8 +29,8 @@ require([
     }
 
     function getBuildsDone(response) {
-        var columns,
-            results;
+        var columns;
+        var results;
 
         function _renderKernel(data, type, object) {
             return buildt.renderKernel(

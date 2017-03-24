@@ -800,7 +800,9 @@ require([
         aNode = tooltipNode.appendChild(document.createElement('a'));
         str = '/boot/all/job';
         str += job;
-        str += 'kernel';
+        str += '/branch/';
+        str += branch;
+        str += '/kernel/';
         str += kernel;
         str += '/';
         aNode.setAttribute('href', str);
@@ -841,6 +843,8 @@ require([
         str += board;
         str += '/job/';
         str += job;
+        str += '/branch/';
+        str += branch;
         str += '/kernel/';
         str += kernel;
         str += '/defconfig/';
