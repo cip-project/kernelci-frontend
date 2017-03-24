@@ -326,7 +326,8 @@ require([
         tableDivId: 'table-div',
         tableLoadingDivId: 'table-loading'
     });
-    setTimeout(getJobs, 0);
+
+    setTimeout(getJobs, 5);
 
     init.hotkeys();
     init.tooltip();

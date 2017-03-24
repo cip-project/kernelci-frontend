@@ -434,7 +434,11 @@ require([
             limit: gNumberRange,
             field: [
                 'job',
-                'kernel', 'created_on', 'git_branch', 'git_commit', 'git_url'
+                'kernel',
+                'created_on',
+                'git_branch',
+                'git_commit',
+                'git_url'
             ]
         };
 
@@ -546,8 +550,8 @@ require([
         tableDivId: 'table-div'
     });
 
-    setTimeout(getDetails, 10);
-    setTimeout(getBuilds, 10);
+    setTimeout(getDetails, 5);
+    setTimeout(getBuilds, 5);
 
     init.hotkeys();
     init.tooltip();
