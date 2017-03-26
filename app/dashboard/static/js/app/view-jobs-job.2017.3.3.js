@@ -20,7 +20,9 @@ require([
     var gPageLen;
     var gSearchFilter;
 
-    document.getElementById('li-job').setAttribute('class', 'active');
+    setTimeout(function() {
+        document.getElementById('li-job').setAttribute('class', 'active');
+    }, 15);
 
     gJobName = null;
     gPageLen = null;
@@ -123,8 +125,8 @@ require([
     }
 
     function getBuildBootCountDone(response) {
-        var batchCount,
-            batchData;
+        var batchCount;
+        var batchData;
 
         batchData = response.result;
 
@@ -143,15 +145,20 @@ require([
     }
 
     function getBuildBootCount(response) {
-        var batchOps,
-            deferred,
-            kernel,
-            queryStr,
-            results;
+        var batchOps;
+        var deferred;
+        var kernel;
+        var queryStr;
+        var results;
 
         function _createOp(result) {
             kernel = result.kernel;
-            queryStr = 'job=' + gJobName + '&kernel=' + kernel;
+            queryStr = 'job=';
+            queryStr += gJobName;
+            queryStr += '&kernel=';
+            queryStr += kernel;
+            queryStr += '&git_branch=';
+            queryStr += result.git_branch;
 
             // Get total build count.
             batchOps.push({
@@ -561,9 +568,9 @@ require([
         tableDivId: 'table-div'
     });
 
-    setTimeout(getDetails, 5);
-    setTimeout(getBuilds, 5);
+    setTimeout(getDetails, 10);
+    setTimeout(getBuilds, 10);
 
-    init.hotkeys();
-    init.tooltip();
+    setTimeout(init.hotkeys, 50);
+    setTimeout(init.tooltip, 50);
 });

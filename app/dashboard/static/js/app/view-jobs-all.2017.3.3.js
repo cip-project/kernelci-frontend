@@ -16,7 +16,10 @@ require([
     var gPageLen;
     var gSearchFilter;
 
-    document.getElementById('li-job').setAttribute('class', 'active');
+    setTimeout(function() {
+        document.getElementById('li-job').setAttribute('class', 'active');
+    }, 15);
+
     gDateRange = appconst.MAX_DATE_RANGE;
     gPageLen = null;
     gSearchFilter = null;
@@ -47,6 +50,7 @@ require([
 
     function getBatchCount(response) {
         var batchOps;
+        var branch;
         var deferred;
         var job;
         var kernel;
@@ -56,7 +60,14 @@ require([
         function _createOp(result) {
             job = result.job;
             kernel = result.kernel;
-            queryStr = 'job=' + job + '&kernel=' + kernel;
+            branch = result.git_branch;
+
+            queryStr = 'job=';
+            queryStr += job;
+            queryStr += '&kernel=';
+            queryStr += kernel;
+            queryStr += '&git_branch=';
+            queryStr += branch;
 
             // Get total build count.
             batchOps.push({
@@ -190,15 +201,20 @@ require([
          * Wrapper to provide the href.
         **/
         function _renderDetails(data, type) {
-            return jobt.renderDetails('/job/' + data + '/', type);
+            var href = '/job/';
+            href += data;
+            href += '/';
+            return jobt.renderDetails(href, type);
         }
 
         /**
          * Wrapper to provide the href.
         **/
         function _renderBootCount(data, type) {
-            return jobt.renderTableBootCount(
-                data, type, '/boot/all/job/' + data + '/');
+            var href = '/boot/all/job/';
+            href += data;
+            href += '/';
+            return jobt.renderTableBootCount(data, type, href);
         }
 
         results = response.result;
@@ -327,8 +343,8 @@ require([
         tableLoadingDivId: 'table-loading'
     });
 
-    setTimeout(getJobs, 5);
+    setTimeout(getJobs, 10);
 
-    init.hotkeys();
-    init.tooltip();
+    setTimeout(init.hotkeys, 50);
+    setTimeout(init.tooltip, 50);
 });
