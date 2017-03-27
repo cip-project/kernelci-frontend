@@ -125,18 +125,18 @@ require([
     }
 
     function getBuildBootCountDone(response) {
-        var batchCount;
         var batchData;
 
         batchData = response.result;
 
+        function parseBatchData(data) {
+            html.replaceContent(
+                document.getElementById(data.operation_id),
+                document.createTextNode(data.result[0].count));
+        }
+
         if (batchData.length > 0) {
-            batchData.forEach(function(batchRes) {
-                batchCount = batchRes.result[0].count;
-                html.replaceContent(
-                    document.getElementById(batchRes.operation_id),
-                    document.createTextNode(batchCount));
-            });
+            batchData.forEach(parseBatchData);
         }
         // Perform the table search now, after completing all operations.
         gBuildsTable
@@ -151,7 +151,7 @@ require([
         var queryStr;
         var results;
 
-        function _createOp(result) {
+        function createBatchOp(result) {
             kernel = result.kernel;
             queryStr = 'job=';
             queryStr += gJobName;
@@ -236,7 +236,7 @@ require([
         results = response.result;
         if (results.length > 0) {
             batchOps = [];
-            results.forEach(_createOp);
+            results.forEach(createBatchOp);
 
             deferred = r.post(
                 '/_ajax/batch', JSON.stringify({batch: batchOps}));
@@ -512,9 +512,10 @@ require([
     function getDetails() {
         var batchOps;
         var deferred;
-        var queryString;
+        var queryStr;
 
-        queryString = 'job=' + gJobName;
+        queryStr = 'job=';
+        queryStr += gJobName;
         batchOps = [];
 
         batchOps.push({
@@ -522,7 +523,7 @@ require([
             method: 'GET',
             resource: 'count',
             document: 'job',
-            query: queryString
+            query: queryStr
         });
 
         batchOps.push({
@@ -530,7 +531,7 @@ require([
             method: 'GET',
             resource: 'count',
             document: 'build',
-            query: queryString
+            query: queryStr
         });
 
         batchOps.push({
@@ -538,7 +539,7 @@ require([
             method: 'GET',
             resource: 'count',
             document: 'boot',
-            query: queryString
+            query: queryStr
         });
 
         deferred = r.post(

@@ -29,17 +29,17 @@ require([
     }
 
     function getBatchCountDone(response) {
-        var bResult;
         var results;
+
+        function parseBatchData(data) {
+            html.replaceContent(
+                document.getElementById(data.operation_id),
+                document.createTextNode(data.result[0].count));
+        }
 
         results = response[0].result;
         if (results.length > 0) {
-            results.forEach(function(result) {
-                bResult = result.result[0];
-                html.replaceContent(
-                    document.getElementById(result.operation_id),
-                    document.createTextNode(bResult.count));
-            });
+            results.forEach(parseBatchData);
         }
 
         // Perform the table search now, after completing all operations.
@@ -57,7 +57,7 @@ require([
         var queryStr;
         var results;
 
-        function _createOp(result) {
+        function createBatchOp(result) {
             job = result.job;
             kernel = result.kernel;
             branch = result.git_branch;
@@ -146,7 +146,7 @@ require([
         results = response.result;
         if (results.length > 0) {
             batchOps = [];
-            results.forEach(_createOp);
+            results.forEach(createBatchOp);
 
             deferred = r.post(
                 '/_ajax/batch', JSON.stringify({batch: batchOps}));
