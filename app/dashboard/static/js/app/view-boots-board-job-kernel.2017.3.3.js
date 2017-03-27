@@ -10,15 +10,17 @@ require([
     'utils/date'
 ], function($, init, e, r, table, html, tboot) {
     'use strict';
-    var gBoardName,
-        gBootsTable,
-        gFileServer,
-        gJobName,
-        gKernelName,
-        gPageLen,
-        gSearchFilter;
+    var gBoardName;
+    var gBootsTable;
+    var gFileServer;
+    var gJobName;
+    var gKernelName;
+    var gPageLen;
+    var gSearchFilter;
 
-    document.getElementById('li-boot').setAttribute('class', 'active');
+    setTimeout(function() {
+        document.getElementById('li-boot').setAttribute('class', 'active');
+    }, 15);
 
     function getBootsFail() {
         html.removeElement(document.getElementById('table-loading'));
@@ -28,9 +30,8 @@ require([
     }
 
     function getBootsDone(response) {
-        var results,
-            columns,
-            rowURL;
+        var results;
+        var columns;
 
         /**
          * Wrapper to inject the server URL.
@@ -47,15 +48,7 @@ require([
                 document.getElementById('table-div'),
                 html.errorDiv('No data found.'));
         } else {
-            rowURL = '/boot/id/%(_id)s/';
-
             columns = [
-                {
-                    data: '_id',
-                    visible: false,
-                    searchable: false,
-                    orderable: false
-                },
                 {
                     data: 'lab_name',
                     title: 'Lab Name',
@@ -107,9 +100,9 @@ require([
             gBootsTable
                 .data(results)
                 .columns(columns)
-                .order([5, 'desc'])
+                .order([4, 'desc'])
                 .languageLengthMenu('boot reports per page')
-                .rowURL(rowURL)
+                .rowURL('/boot/id/%(_id)s/')
                 .rowURLElements(['_id'])
                 .draw();
 
@@ -136,18 +129,24 @@ require([
     }
 
     function setupData() {
-        var aNode,
-            spanNode,
-            tooltipNode;
+        var aNode;
+        var spanNode;
+        var tooltipNode;
+        var str;
 
         // Add the tree data.
         spanNode = document.createElement('span');
 
         tooltipNode = html.tooltip();
-        tooltipNode.setAttribute('title', 'Boot details for&nbsp;' + gJobName);
+        str = 'Boot reports for tree&nbsp;';
+        str += gJobName;
+        tooltipNode.setAttribute('title', str);
 
         aNode = document.createElement('a');
-        aNode.setAttribute('href', '/boot/all/job/' + gJobName + '/');
+        str = '/boot/all/job/';
+        str += gJobName;
+        str += '/';
+        aNode.setAttribute('href', str);
         aNode.appendChild(document.createTextNode(gJobName));
 
         tooltipNode.appendChild(aNode);
@@ -156,10 +155,15 @@ require([
         spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
 
         tooltipNode = html.tooltip();
-        tooltipNode.setAttribute('title', 'Details for job&nbsp;' + gJobName);
+        str = 'Details for tree&nbsp;';
+        str += gJobName;
+        tooltipNode.setAttribute('title', str);
 
         aNode = document.createElement('a');
-        aNode.setAttribute('href', '/job/' + gJobName + '/');
+        str = '/job/';
+        str += gJobName;
+        str += '/';
+        aNode.setAttribute('href', str);
 
         aNode.appendChild(html.tree());
         tooltipNode.appendChild(aNode);
@@ -171,16 +175,19 @@ require([
         spanNode = document.createElement('span');
 
         tooltipNode = html.tooltip();
-        tooltipNode.setAttribute(
-            'title',
-            'Boot reports for&nbsp;' + gJobName +
-                '&nbsp;&dash;&nbsp;' + gKernelName
-        );
+        str = 'Boot reports for&nbsp;' ;
+        str += gJobName;
+        str += '&nbsp;&ndash;&nbsp;';
+        str += gKernelName;
+        tooltipNode.setAttribute('title', str);
 
         aNode = document.createElement('a');
-        aNode.setAttribute(
-            'href',
-            '/boot/all/job/' + gJobName + '/kernel/' + gKernelName + '/');
+        str = '/boot/all/job/';
+        str += gJobName;
+        str += '/kernel/';
+        str += gKernelName;
+        str += '/';
+        aNode.setAttribute('href', str);
         aNode.appendChild(document.createTextNode(gKernelName));
 
         tooltipNode.appendChild(aNode);
@@ -189,15 +196,19 @@ require([
         spanNode.insertAdjacentHTML('beforeend', '&nbsp;&mdash;&nbsp;');
 
         tooltipNode = html.tooltip();
-        tooltipNode.setAttribute(
-            'title',
-            'Build reports for&nbsp;' + gJobName +
-                '&nbsp;&dash;&nbsp;' + gKernelName
-        );
+        str = 'Build reports for&nbsp;';
+        str += gJobName;
+        str += '&nbsp;&ndash;&nbsp;';
+        str += gKernelName;
+        tooltipNode.setAttribute('title', str);
 
         aNode = document.createElement('a');
-        aNode.setAttribute(
-            'href', '/build/' + gJobName + '/kernel/' + gKernelName + '/');
+        str = '/build/';
+        str += gJobName;
+        str += '/kernel/';
+        str += gKernelName;
+        str += '/';
+        aNode.setAttribute('href', str);
 
         aNode.appendChild(html.build());
         tooltipNode.appendChild(aNode);
@@ -208,11 +219,15 @@ require([
 
         // The board.
         tooltipNode = html.tooltip();
-        tooltipNode.setAttribute(
-            'title',
-            'Boot reports for board&nbsp;&#171;' + gBoardName + '&#187;');
+        str = 'Boot reports for board&nbsp;';
+        str += gBoardName;
+        tooltipNode.setAttribute('title', str);
+
         aNode = document.createElement('a');
-        aNode.setAttribute('href', '/boot/' + gBoardName + '/');
+        str = '/boot/';
+        str += gBoardName;
+        str += '/';
+        aNode.setAttribute('href', str);
         aNode.appendChild(document.createTextNode(gBoardName));
         aNode.insertAdjacentHTML('beforeend', '&nbsp;');
         aNode.appendChild(html.search());
@@ -245,9 +260,10 @@ require([
         tableLoadingDivId: 'table-loading',
         tableDivId: 'table-div'
     });
-    setupData();
-    getBoots();
 
-    init.hotkeys();
-    init.tooltip();
+    setTimeout(setupData, 10);
+    setTimeout(getBoots, 10);
+
+    setTimeout(init.hotkeys, 50);
+    setTimeout(init.tooltip, 50);
 });

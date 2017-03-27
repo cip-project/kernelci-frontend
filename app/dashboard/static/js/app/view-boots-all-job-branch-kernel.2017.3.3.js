@@ -744,7 +744,7 @@ require([
     gSessionStorage = storage(gStorageName);
     gResultFilter = filter('data-filter');
 
-    setTimeout(registerEvents, 15);
+    setTimeout(registerEvents, 25);
     setTimeout(getJob.bind(null, gJob, gBranch, gKernel), 10);
 
     // Set the click event on the regressions tab now, so that we have

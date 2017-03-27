@@ -17,7 +17,10 @@ require([
     var gDateRange;
     var gFileServer;
 
-    document.getElementById('li-boot').setAttribute('class', 'active');
+    setTimeout(function() {
+        document.getElementById('li-boot').setAttribute('class', 'active');
+    }, 15);
+
     gDateRange = appconst.MAX_DATE_RANGE;
     gFileServer = null;
 
@@ -758,7 +761,7 @@ require([
         tooltipNode.setAttribute('title', str);
 
         aNode = tooltipNode.appendChild(document.createElement('a'));
-        str += '/boot/all/job/';
+        str = '/boot/all/job/';
         str += job;
         str += '/';
         aNode.setAttribute('href', str);
@@ -1121,8 +1124,8 @@ require([
         gDateRange = document.getElementById('date-range').value;
     }
 
-    setTimeout(getBootData, 3);
+    setTimeout(getBootData, 10);
 
-    init.hotkeys();
-    init.tooltip();
+    setTimeout(init.hotkeys, 50);
+    setTimeout(init.tooltip, 50);
 });

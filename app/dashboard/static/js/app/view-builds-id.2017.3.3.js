@@ -18,7 +18,7 @@ require([
 
     setTimeout(function() {
         document.getElementById('li-build').setAttribute('class', 'active');
-    }, 5);
+    }, 15);
 
     function getBisectFail() {
         html.removeElement(
@@ -932,7 +932,7 @@ require([
         gBuildId = document.getElementById('build-id').value;
     }
 
-    setTimeout(getBuilds, 15);
+    setTimeout(getBuilds, 10);
 
     setTimeout(init.hotkeys, 50);
     setTimeout(init.tooltip, 50);

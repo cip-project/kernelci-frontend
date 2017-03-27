@@ -20,7 +20,7 @@ require([
 
     setTimeout(function() {
         document.getElementById('li-boot').setAttribute('class', 'active');
-    }, 10);
+    }, 15);
 
     gPageLen = null;
     gSearchFilter = null;
@@ -142,7 +142,7 @@ require([
             $.when(deferred)
                 .fail(e.error, getBootsFail)
                 .done(getBootsDone);
-        }, 10);
+        }, 25);
     }
 
     function setupData() {
@@ -290,6 +290,6 @@ require([
     setTimeout(setupData, 25);
     setTimeout(getBoots, 25);
 
-    init.hotkeys();
-    init.tooltip();
+    setTimeout(init.hotkeys, 50);
+    setTimeout(init.tooltip, 50);
 });

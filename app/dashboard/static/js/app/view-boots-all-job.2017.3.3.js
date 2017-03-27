@@ -374,7 +374,7 @@ require([
         tableLoadingDivId: 'table-loading'
     });
 
-    setTimeout(getDetailsCount, 10);
+    getDetailsCount();
     setTimeout(getBoots, 10);
 
     setTimeout(init.hotkeys, 50);

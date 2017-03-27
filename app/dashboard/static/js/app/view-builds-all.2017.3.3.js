@@ -20,7 +20,7 @@ require([
     setTimeout(function() {
         document
             .getElementById('li-build').setAttribute('class', 'active');
-    }, 5);
+    }, 15);
 
     gDateRange = appconst.MAX_DATE_RANGE;
     gPageLen = null;
@@ -36,7 +36,7 @@ require([
 
         results = response.result;
         if (results.length > 0) {
-            setTimeout(gBuildsTable.addRows.bind(gBuildsTable, results), 9);
+            setTimeout(gBuildsTable.addRows.bind(gBuildsTable, results), 25);
         }
 
         // Remove the loading banner when we get the last response.
@@ -54,13 +54,17 @@ require([
      * @param {object} response: The response from the previous request.
     **/
     function getMoreBuilds(response) {
-        var deferred;
         var docFrag;
         var iNode;
         var idx;
         var resTotal;
         var spanNode;
         var totalReq;
+
+        function getData(reqData) {
+            $.when(r.get('/_ajax/build', reqData))
+                .done(getMoreBuildsDone);
+        }
 
         resTotal = response.count;
         if (response.result.length < resTotal) {
@@ -83,8 +87,7 @@ require([
             // Starting at 1 since we already got the first batch of results.
             for (idx = 1; idx <= totalReq; idx = idx + 1) {
                 gBuildReqData.skip = appconst.MAX_QUERY_LIMIT * idx;
-                deferred = r.get('/_ajax/build', gBuildReqData);
-                $.when(deferred).done(getMoreBuildsDone);
+                setTimeout(getData.bind(null, gBuildReqData), 25);
             }
         }
     }
@@ -240,8 +243,8 @@ require([
         tableDivId: 'table-div'
     });
 
-    setTimeout(getBuilds, 3);
+    setTimeout(getBuilds, 10);
 
-    init.hotkeys();
-    init.tooltip();
+    setTimeout(init.hotkeys, 50);
+    setTimeout(init.tooltip, 50);
 });

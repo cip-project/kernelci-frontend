@@ -34,7 +34,7 @@ require([
 
         results = response.result;
         if (results.length > 0) {
-            setTimeout(gBootsTable.addRows.bind(gBootsTable, results), 25);
+            setTimeout(gBootsTable.addRows.bind(gBootsTable, results), 35);
         }
 
         // Remove the loading banner when we get the last response.
@@ -59,6 +59,11 @@ require([
         var spanNode;
         var totalReq;
 
+        function getData(reqData) {
+            $.when(r.get('/_ajax/boot', reqData))
+                .done(getMoreBootsDone);
+        }
+
         resTotal = response.count;
         if (response.result.length < resTotal) {
             // Add a small loading banner while we load more results.
@@ -80,8 +85,7 @@ require([
             // Starting at 1 since we already got the first batch of results.
             for (idx = 1; idx <= totalReq; idx = idx + 1) {
                 gBootReqData.skip = appconst.MAX_QUERY_LIMIT * idx;
-                $.when(r.get('/_ajax/boot', gBootReqData))
-                    .done(getMoreBootsDone);
+                setTimeout(getData.bind(null, gBootReqData), 25);
             }
         }
     }
