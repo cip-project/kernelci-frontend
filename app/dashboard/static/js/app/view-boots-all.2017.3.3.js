@@ -18,7 +18,7 @@ require([
 
     setTimeout(function() {
         document.getElementById('li-boot').setAttribute('class', 'active');
-    }, 5);
+    }, 15);
 
     gSearchFilter = null;
     gPageLen = null;
@@ -34,7 +34,7 @@ require([
 
         results = response.result;
         if (results.length > 0) {
-            setTimeout(gBootsTable.addRows.bind(gBootsTable, results), 9);
+            setTimeout(gBootsTable.addRows.bind(gBootsTable, results), 25);
         }
 
         // Remove the loading banner when we get the last response.
@@ -244,8 +244,8 @@ require([
         tableLoadingDivId: 'table-loading'
     });
 
-    setTimeout(getBoots, 3);
+    setTimeout(getBoots, 10);
 
-    init.hotkeys();
-    init.tooltip();
+    setTimeout(init.hotkeys, 50);
+    setTimeout(init.tooltip, 50);
 });
