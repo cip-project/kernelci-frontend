@@ -5,7 +5,7 @@ PackageSupplier: Organization: Linux Foundation
 PackageHomePage: https://wiki.linuxfoundation.org/civilinfrastructureplatform/ciptesting
 PackageLicenseDeclared: AGPL-3.0
 PackageCopyrightText: 2017, Codethink Ltd
-PackageSummary: <text>Ansible configuration to deploy/setup the kernelci-frontend system
+PackageSummary: <text>Data visualization tool/dashboard for the kernel-ci-backend.
                 </text>
 Created: 2017-10-12
 PackageDownloadLocation: https://gitlab.com/cip-project/cip-testing/kernelci-frontend
